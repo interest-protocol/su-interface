@@ -10,7 +10,7 @@ const Indicators: FC = () => (
     width="100%"
     display="grid"
     gridTemplateColumns="1fr 1fr"
-    gridColumn={['1/-1', '1/-1', '1/6']}
+    gridColumn={['1/-1', '1/-1', '1/5']}
   >
     <Box
       p="l"
@@ -19,12 +19,12 @@ const Indicators: FC = () => (
       gridColumn="1/-1"
       border="1px solid"
       flexDirection="column"
-      borderColor="lowestContainer"
+      borderColor="lowContainer"
       justifyContent="space-between"
     >
-      <ISuiSVG rounded width="100%" maxWidth="3rem" maxHeight="3rem" />
+      <ISuiSVG rounded height="100%" maxWidth="2.5rem" maxHeight="3rem" />
       <Box display="flex" flexDirection="column" gap="s">
-        <Typography variant="display" size="medium">
+        <Typography variant="headline" size="large">
           59.09
         </Typography>
         <Box display="flex" alignItems="center" gap="4xl">
@@ -39,14 +39,14 @@ const Indicators: FC = () => (
       p="l"
       borderRadius="m"
       border="1px solid"
-      borderColor="lowestContainer"
+      borderColor="lowContainer"
       display="flex"
       flexDirection="column"
       justifyContent="space-between"
     >
-      <FSuiSVG rounded width="100%" maxWidth="3.5rem" maxHeight="3.5rem" />
+      <FSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
       <Box display="flex" flexDirection="column" gap="s">
-        <Typography variant="display" size="medium">
+        <Typography variant="headline" size="large">
           1M
         </Typography>
         <Box display="flex" alignItems="center" gap="s">
@@ -63,11 +63,11 @@ const Indicators: FC = () => (
       borderRadius="m"
       border="1px solid"
       flexDirection="column"
-      borderColor="lowestContainer"
+      borderColor="lowContainer"
       justifyContent="space-between"
     >
-      <XSuiSVG rounded width="100%" maxWidth="3.5rem" maxHeight="3.5rem" />
-      <Typography variant="display" size="medium">
+      <XSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
+      <Typography variant="headline" size="large">
         500
       </Typography>
     </Box>
@@ -78,7 +78,7 @@ const Indicators: FC = () => (
       gridColumn="1/-1"
       border="1px solid"
       flexDirection="column"
-      borderColor="lowestContainer"
+      borderColor="lowContainer"
       justifyContent="space-between"
     >
       <Box
@@ -101,7 +101,7 @@ const Indicators: FC = () => (
         >
           Collateral Ratio
         </Typography>
-        <Typography variant="display" size="small">
+        <Typography variant="headline" size="large">
           312.53%
         </Typography>
       </Box>

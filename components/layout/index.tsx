@@ -18,6 +18,7 @@ const Layout: FC<PropsWithChildren> = ({ children }) => (
       variant="container"
       width={['unset', 'unset', '100%']}
       my={['4xl', '4xl', '4xl', '4xl', '4xl']}
+      gap={['xs', 'xs', 'xs', 'xs', 'xs', 'xs']}
     >
       {children}
     </Box>
