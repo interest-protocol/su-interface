@@ -10,10 +10,8 @@ export interface MenuProfileProps {
 
 export interface ProfileMenuItemProps {
   name: string;
-  description: string;
   Icon: FC<SVGProps>;
-  hasBorder: boolean;
-  disabled?: boolean;
+  description: string;
   handleAction?: Record<string, () => void | Promise<void>>;
 }
 
