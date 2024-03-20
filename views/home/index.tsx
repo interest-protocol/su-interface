@@ -1,12 +1,12 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
-const Swap: FC = () => (
+const Home: FC = () => (
   <Box>
-    <Typography variant="display" size="large">
-      Swap
+    <Typography variant="display" size="large" color="onSurface">
+      Home
     </Typography>
   </Box>
 );
 
-export default Swap;
+export default Home;

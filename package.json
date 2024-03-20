@@ -11,12 +11,21 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
-    "@interest-protocol/ui-kit": "0.2.2-alpha",
+    "@interest-protocol/ui-kit": "0.2.25-alpha",
+    "@mysten/dapp-kit": "^0.12.5",
+    "@mysten/sui.js": "^0.51.0",
+    "@mysten/suins-toolkit": "^0.4.4",
     "@stylin.js/react": "1.0.5-alpha.0",
+    "@tanstack/react-query": "^5.28.4",
+    "@types/ramda": "^0.29.11",
     "next": "14.0.3",
     "prettier": "^3.1.0",
+    "ramda": "^0.29.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-loading-skeleton": "^3.4.0",
+    "unikey": "^1.1.0"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.11.0",
