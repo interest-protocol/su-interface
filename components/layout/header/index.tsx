@@ -6,7 +6,7 @@ import { LogoSVG } from '@/components/svg';
 import Wallet from './wallet';
 
 const Header: FC = () => (
-  <Box variant="container" width="100%">
+  <Box variant="container" width={['unset', 'unset', '100%']}>
     <Box
       as="header"
       width="100%"
@@ -15,7 +15,7 @@ const Header: FC = () => (
       py={['unset', 'unset', 'l']}
       justifyContent="space-between"
     >
-      <LogoSVG maxWidth="3rem" maxHeight="3rem" width="100%" />
+      <LogoSVG maxWidth="4rem" maxHeight="4rem" width="100%" />
       <Box display="flex">
         <Wallet />
       </Box>

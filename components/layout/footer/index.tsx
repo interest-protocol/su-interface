@@ -5,7 +5,7 @@ import unikey from 'unikey';
 import { SOCIAL_MEDIA } from '@/constants';
 
 const Footer: FC = () => (
-  <Box variant="container" width="100%">
+  <Box variant="container">
     <Box
       p="l"
       gap="l"
@@ -14,6 +14,7 @@ const Footer: FC = () => (
       gridColumn="1/-1"
       alignItems="center"
       flexDirection="column"
+      width={['unset', 'unset', '100%']}
     >
       <Typography variant="label" size="large">
         Follow us
