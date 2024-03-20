@@ -1,20 +1,22 @@
 import { Box } from '@interest-protocol/ui-kit';
 import { FC, PropsWithChildren } from 'react';
 
+import Footer from './footer';
 import Header from './header';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => (
   <Box
-    as="main"
     bg="black"
-    minHeight="100vh"
     display="flex"
+    color="onSurface"
+    minHeight="100vh"
     flexDirection="column"
   >
-    <Box variant="container">
-      <Header />
+    <Header />
+    <Box flex="1" variant="container" width="100%">
       {children}
     </Box>
+    <Footer />
   </Box>
 );
 
