@@ -4,7 +4,7 @@ import { FC } from 'react';
 const Home: FC = () => (
   <Box>
     <Typography variant="display" size="large" color="onSurface">
-      Home
+      SU Protocol
     </Typography>
   </Box>
 );
