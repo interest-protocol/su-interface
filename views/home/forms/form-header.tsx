@@ -39,7 +39,7 @@ const FormHeader: FC = () => {
           }
         >
           <Typography variant="label" size="large">
-            FSui: $1.1108
+            FSui: $1.108
           </Typography>
         </Tag>
         <Tag
@@ -58,7 +58,7 @@ const FormHeader: FC = () => {
           }
         >
           <Typography variant="label" size="large">
-            XSui: $1.1108
+            XSui: $1.108
           </Typography>
         </Tag>
       </Box>
