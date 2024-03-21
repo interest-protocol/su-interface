@@ -6,7 +6,11 @@ import toFormat from 'toformat';
 
 import { parseBigNumberish } from '@/utils';
 
-import { Rounding } from '../constants';
+export enum Rounding {
+  ROUND_DOWN,
+  ROUND_HALF_UP,
+  ROUND_UP,
+}
 
 const Decimal = toFormat(_Decimal);
 
@@ -140,6 +144,7 @@ export class Fraction {
     return quotient.toFormat(quotient.decimalPlaces(), format);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public toFixed(decimalPlaces: number, options?: Record<string, any>): string {
     const value = this.numerator.div(this.denominator).toString();
     const decimals = value.slice(value.length - decimalPlaces);
