@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 
-import { MAX_NUMBER_INPUT_VALUE } from '@/constants';
 import { BigNumberish } from '@/interface';
 import {
   isBigNumberish,
@@ -10,6 +9,8 @@ import {
 } from '@/utils';
 
 import { Fraction } from './fraction';
+
+const MAX_NUMBER_INPUT_VALUE = 9000000000000000;
 
 const ONE_COIN = new BigNumber(1000000000);
 
