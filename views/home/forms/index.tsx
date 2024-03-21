@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 import FormFields from './form-fields';
 import FormHeader from './form-header';
+import FormSummary from './form-summary';
 
 const Forms: FC = () => {
   const handleChangeTab = (tabIndex: number) => {
@@ -13,6 +14,7 @@ const Forms: FC = () => {
     <Box display="flex" flexDirection="column" gap="3xl">
       <FormHeader handleChangeTab={handleChangeTab} />
       <FormFields />
+      <FormSummary />
     </Box>
   );
 };
