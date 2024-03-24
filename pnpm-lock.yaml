@@ -65,6 +65,9 @@ dependencies:
   swr:
     specifier: ^2.2.5
     version: 2.2.5(react@18.2.0)
+  toformat:
+    specifier: ^2.0.0
+    version: 2.0.0
   unikey:
     specifier: ^1.1.0
     version: 1.1.0
@@ -6936,6 +6939,13 @@ packages:
     dependencies:
       is-number: 7.0.0
     dev: true
+
+  /toformat@2.0.0:
+    resolution:
+      {
+        integrity: sha512-03SWBVop6nU8bpyZCx7SodpYznbZF5R4ljwNLBcTQzKOD9xuihRo/psX58llS1BMFhhAI08H3luot5GoXJz2pQ==,
+      }
+    dev: false
 
   /trim-newlines@3.0.1:
     resolution:

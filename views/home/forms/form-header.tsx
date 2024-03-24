@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { FSuiSVG, XSuiSVG } from '@/components/svg';
+import { formatDollars } from '@/utils';
 
 import { FormTypeEnum, SuForm } from './forms.types';
 
@@ -10,6 +11,8 @@ const FormHeader: FC = () => {
   const { control, setValue } = useFormContext<SuForm>();
 
   const formType = useWatch({ control, name: 'formType' });
+  const fSuiPrice = useWatch({ control, name: 'fSui.usdPrice' });
+  const xSuiPrice = useWatch({ control, name: 'xSui.usdPrice' });
 
   const handleChangeTab = (tabIndex: FormTypeEnum) =>
     setValue('formType', tabIndex);
@@ -39,7 +42,7 @@ const FormHeader: FC = () => {
           }
         >
           <Typography variant="label" size="large">
-            FSui: $1.108
+            FSui: {formatDollars(+fSuiPrice.toFixed(4))}
           </Typography>
         </Tag>
         <Tag
@@ -58,7 +61,7 @@ const FormHeader: FC = () => {
           }
         >
           <Typography variant="label" size="large">
-            XSui: $1.108
+            XSui: {formatDollars(+fSuiPrice.toFixed(4))}
           </Typography>
         </Tag>
       </Box>

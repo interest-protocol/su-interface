@@ -30,6 +30,7 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
       onBlur,
       status,
       active,
+      Bottom,
       balance,
       onFocus,
       variant,
@@ -44,10 +45,10 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
     },
     ref
   ) => {
+    const id = useId();
     const { colors } = useTheme() as Theme;
     const [focus, setFocus] = useState(false);
     const [value, setValue] = useState<string>();
-    const id = useId();
 
     const statusColor = focus || status === 'none' ? 'onSurface' : status;
 
@@ -146,6 +147,7 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
               }}
               {...props}
             />
+            {Bottom}
           </Box>
           {handleMax && (
             <Box display="flex" alignItems="center" justifyContent="center">

@@ -15,6 +15,7 @@ export interface TokenFieldProps
   activeBg?: string;
   tokenName: string;
   disabled?: boolean;
+  Bottom?: ReactNode;
   TokenIcon?: ReactNode;
   fieldProps?: BoxProps;
   handleMax?: () => void;
