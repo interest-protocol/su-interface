@@ -49,12 +49,6 @@ const Indicators: FC = () => (
         <Typography variant="headline" size="large">
           1M
         </Typography>
-        <Box display="flex" alignItems="center" gap="s">
-          <ProgressIndicator variant="bar" value={20} />
-          <Typography variant="label" size="medium" whiteSpace="nowrap">
-            Max. 20M
-          </Typography>
-        </Box>
       </Box>
     </Box>
     <Box
