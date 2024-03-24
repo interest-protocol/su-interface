@@ -14,10 +14,15 @@ const Forms: FC = () => {
   const form = useForm<SuForm>({
     defaultValues: {
       formType: FormTypeEnum.Mint,
+      iSui: {
+        usdPrice: 0,
+      },
       fSui: {
+        usdPrice: 0,
         active: false,
       },
       xSui: {
+        usdPrice: 0,
         active: false,
       },
     },
