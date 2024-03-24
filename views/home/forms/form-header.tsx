@@ -61,7 +61,7 @@ const FormHeader: FC = () => {
           }
         >
           <Typography variant="label" size="large">
-            XSui: {formatDollars(+fSuiPrice.toFixed(4))}
+            XSui: {formatDollars(+xSuiPrice.toFixed(4))}
           </Typography>
         </Tag>
       </Box>
