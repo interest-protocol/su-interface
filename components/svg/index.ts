@@ -1,4 +1,5 @@
 export { default as ArrowLeftSVG } from './arrow-left';
+export { default as ArrowRightSVG } from './arrow-right';
 export { default as CheckmarkSVG } from './checkmark';
 export { default as ChevronRightSVG } from './chevron-right';
 export { default as CircleSVG } from './circle';

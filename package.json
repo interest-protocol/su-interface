@@ -1,5 +1,5 @@
 {
-  "name": "ipx-fe-template",
+  "name": "su-interface",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -18,13 +18,18 @@
     "@stylin.js/react": "1.0.5-alpha.0",
     "@tanstack/react-query": "^5.28.4",
     "@types/ramda": "^0.29.11",
+    "bignumber.js": "^9.1.2",
+    "decimal.js-light": "^2.5.1",
+    "framer-motion": "^11.0.20",
     "next": "14.0.3",
     "prettier": "^3.1.0",
     "ramda": "^0.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.1",
     "react-hot-toast": "^2.4.1",
     "react-loading-skeleton": "^3.4.0",
+    "swr": "^2.2.5",
     "unikey": "^1.1.0"
   },
   "devDependencies": {
