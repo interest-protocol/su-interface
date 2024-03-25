@@ -39,59 +39,63 @@ const FormButton: FC = () => {
   const disabled = !form.fSui?.active && !form.xSui?.active;
 
   const mint = async () => {
-    if (!wallet?.address) throw new Error('Must connect your wallet');
-    if (!form.iSui || form.iSui.value == '0')
-      throw new Error('Cannot mint 0 coins');
+    try {
+      if (!wallet?.address) throw new Error('Must connect your wallet');
+      if (!form.iSui || form.iSui.value == '0')
+        throw new Error('Cannot mint 0 coins');
 
-    const txb = new TransactionBlock();
+      const txb = new TransactionBlock();
 
-    const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
+      const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
 
-    const isFMint = !!form.fSui?.active;
-    console.log(isFMint);
-    const base_in = getCoinOfValue({
-      txb,
-      coinType: `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type,
-      coinValue: BigInt(amount.toString()),
-      coinsMap: web3.coinsMap,
-    });
+      const isFMint = !!form.fSui?.active;
 
-    const price = requestPriceOracle(txb);
-
-    const [coinOut, coinExtra] = txb.moveCall({
-      target: `${OBJECT_IDS.SU}::vault::${
-        isFMint ? 'mint_f_coin' : 'mint_x_coin'
-      }`,
-      arguments: [
-        txb.object(OBJECT_IDS.VAULT),
-        txb.object(OBJECT_IDS.TREASURY),
-        txb.object(SUI_CLOCK_OBJECT_ID),
-        base_in,
-        price,
-        txb.pure('0'),
-      ],
-    });
-
-    const returnValues = [coinOut];
-
-    if (!isFMint) returnValues.push(coinExtra);
-
-    txb.transferObjects(returnValues, wallet.address);
-
-    const { signature, transactionBlockBytes } =
-      await signTransactionBlock.mutateAsync({
-        transactionBlock: txb,
+      const base_in = getCoinOfValue({
+        txb,
+        coinType: `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type,
+        coinValue: BigInt(amount.toString()),
+        coinsMap: web3.coinsMap,
       });
 
-    const tx = await suiClient.executeTransactionBlock({
-      signature,
-      transactionBlock: transactionBlockBytes,
-      requestType: 'WaitForEffectsCert',
-      options: { showEffects: true },
-    });
+      const price = requestPriceOracle(txb);
 
-    throwTXIfNotSuccessful(tx);
-    showTXSuccessToast(tx);
+      const [coinOut, coinExtra] = txb.moveCall({
+        target: `${OBJECT_IDS.SU}::vault::${
+          isFMint ? 'mint_f_coin' : 'mint_x_coin'
+        }`,
+        arguments: [
+          txb.object(OBJECT_IDS.VAULT),
+          txb.object(OBJECT_IDS.TREASURY),
+          txb.object(SUI_CLOCK_OBJECT_ID),
+          base_in,
+          price,
+          txb.pure('0'),
+        ],
+      });
+
+      const returnValues = [coinOut];
+
+      if (!isFMint) returnValues.push(coinExtra);
+
+      txb.transferObjects(returnValues, wallet.address);
+
+      const { signature, transactionBlockBytes } =
+        await signTransactionBlock.mutateAsync({
+          transactionBlock: txb,
+        });
+
+      const tx = await suiClient.executeTransactionBlock({
+        signature,
+        transactionBlock: transactionBlockBytes,
+        requestType: 'WaitForEffectsCert',
+        options: { showEffects: true },
+      });
+
+      throwTXIfNotSuccessful(tx);
+      showTXSuccessToast(tx);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const redeem = async () => {
@@ -154,8 +158,6 @@ const FormButton: FC = () => {
       });
 
       console.log(tx);
-    } catch (e) {
-      console.log(e);
     } finally {
       setLoading(false);
     }
@@ -165,10 +167,7 @@ const FormButton: FC = () => {
     toast.promise(mint(), {
       loading: 'Minting...',
       success: 'Minted successfully',
-      error: (e) => {
-        console.log(e);
-        return 'Fail on Mint';
-      },
+      error: 'Fail on Mint',
     });
 
   const onRedeem = () =>
