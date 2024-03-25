@@ -88,7 +88,71 @@ const FormButton: FC = () => {
     showTXSuccessToast(tx);
   };
 
-  const redeem = async () => {};
+  const redeem = async () => {
+    try {
+      if (!wallet?.address) throw new Error('Must connect your wallet');
+
+      const isFRedeem = !!form.fSui?.active;
+
+      const pred = isFRedeem
+        ? !form.fSui || form.fSui.value == '0'
+        : !form.xSui || form.xSui.value == '0';
+
+      if (pred) throw new Error('Cannot redeem 0 coins');
+
+      setLoading(true);
+
+      const txb = new TransactionBlock();
+
+      const valueIn = isFRedeem ? form.fSui?.value : form.xSui?.value;
+
+      const amount = FixedPointMath.toBigNumber(valueIn || 0);
+
+      const coinIn = await getCoinOfValue(
+        suiClient,
+        txb,
+        wallet.address,
+        `${OBJECT_IDS.SU}::${isFRedeem ? 'f_sui::F_SUI' : 'x_sui::X_SUI'}`,
+        BigInt(amount.toString())
+      );
+
+      const [transactionBlock, price] = requestPriceOracle(txb);
+
+      const [coinOut] = transactionBlock.moveCall({
+        target: `${OBJECT_IDS.SU}::vault::${
+          isFRedeem ? 'redeem_f_coin' : 'redeem_x_coin'
+        }`,
+        arguments: [
+          transactionBlock.object(OBJECT_IDS.VAULT),
+          transactionBlock.object(OBJECT_IDS.TREASURY),
+          transactionBlock.object(SUI_CLOCK_OBJECT_ID),
+          coinIn,
+          price,
+          transactionBlock.pure('0'),
+        ],
+      });
+
+      transactionBlock.transferObjects([coinOut], wallet.address);
+
+      const { signature, transactionBlockBytes } =
+        await signTransactionBlock.mutateAsync({
+          transactionBlock: transactionBlock,
+        });
+
+      const tx = await suiClient.executeTransactionBlock({
+        signature,
+        transactionBlock: transactionBlockBytes,
+        requestType: 'WaitForEffectsCert',
+        options: { showEffects: true },
+      });
+
+      console.log(tx);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const onMint = () =>
     toast.promise(mint(), {
