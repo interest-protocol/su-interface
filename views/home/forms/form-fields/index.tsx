@@ -104,6 +104,7 @@ const FormFields: FC = () => {
             if (!fSuiActive) {
               setValue('fSui.active', true);
               setValue('xSui.active', false);
+              setValue('fSui.value', '' as `${number}`);
             }
           }}
           TokenIcon={
@@ -147,6 +148,7 @@ const FormFields: FC = () => {
             if (!xSuiActive) {
               setValue('xSui.active', true);
               setValue('fSui.active', false);
+              setValue('fSui.value', '' as `${number}`);
             }
           }}
           TokenIcon={

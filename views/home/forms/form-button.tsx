@@ -12,6 +12,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
+import { useWeb3 } from '@/context/web3';
 import { FixedPointMath } from '@/lib';
 import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
 import { requestPriceOracle } from '@/utils/oracle';
@@ -19,6 +20,7 @@ import { requestPriceOracle } from '@/utils/oracle';
 import { FormTypeEnum, SuForm } from './forms.types';
 
 const FormButton: FC = () => {
+  const { mutate } = useWeb3();
   const suiClient = useSuiClient();
   const wallet = useCurrentAccount();
   const { control } = useFormContext<SuForm>();
@@ -32,60 +34,64 @@ const FormButton: FC = () => {
   const disabled = !form.fSui?.active && !form.xSui?.active;
 
   const mint = async () => {
-    if (!wallet?.address) throw new Error('Must connect your wallet');
-    if (!form.iSui || form.iSui.value == '0')
-      throw new Error('Cannot mint 0 coins');
+    try {
+      if (!wallet?.address) throw new Error('Must connect your wallet');
+      if (!form.iSui || form.iSui.value == '0')
+        throw new Error('Cannot mint 0 coins');
 
-    const txb = new TransactionBlock();
+      const txb = new TransactionBlock();
 
-    const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
+      const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
 
-    const isFMint = !!form.fSui?.active;
+      const isFMint = !!form.fSui?.active;
 
-    const base_in = await getCoinOfValue(
-      suiClient,
-      txb,
-      wallet.address,
-      `${OBJECT_IDS.SU}::i_sui::I_SUI`,
-      BigInt(amount.toString())
-    );
+      const base_in = await getCoinOfValue(
+        suiClient,
+        txb,
+        wallet.address,
+        `${OBJECT_IDS.SU}::i_sui::I_SUI`,
+        BigInt(amount.toString())
+      );
 
-    const [transactionBlock, price] = requestPriceOracle(txb);
+      const [transactionBlock, price] = requestPriceOracle(txb);
 
-    const [coinOut, coinExtra] = transactionBlock.moveCall({
-      target: `${OBJECT_IDS.SU}::vault::${
-        isFMint ? 'mint_f_coin' : 'mint_x_coin'
-      }`,
-      arguments: [
-        transactionBlock.object(OBJECT_IDS.VAULT),
-        transactionBlock.object(OBJECT_IDS.TREASURY),
-        transactionBlock.object(SUI_CLOCK_OBJECT_ID),
-        base_in,
-        price,
-        transactionBlock.pure('0'),
-      ],
-    });
-
-    const returnValues = [coinOut];
-
-    if (!isFMint) returnValues.push(coinExtra);
-
-    transactionBlock.transferObjects(returnValues, wallet.address);
-
-    const { signature, transactionBlockBytes } =
-      await signTransactionBlock.mutateAsync({
-        transactionBlock: transactionBlock,
+      const [coinOut, coinExtra] = transactionBlock.moveCall({
+        target: `${OBJECT_IDS.SU}::vault::${
+          isFMint ? 'mint_f_coin' : 'mint_x_coin'
+        }`,
+        arguments: [
+          transactionBlock.object(OBJECT_IDS.VAULT),
+          transactionBlock.object(OBJECT_IDS.TREASURY),
+          transactionBlock.object(SUI_CLOCK_OBJECT_ID),
+          base_in,
+          price,
+          transactionBlock.pure('0'),
+        ],
       });
 
-    const tx = await suiClient.executeTransactionBlock({
-      signature,
-      transactionBlock: transactionBlockBytes,
-      requestType: 'WaitForEffectsCert',
-      options: { showEffects: true },
-    });
+      const returnValues = [coinOut];
 
-    throwTXIfNotSuccessful(tx);
-    showTXSuccessToast(tx);
+      if (!isFMint) returnValues.push(coinExtra);
+
+      transactionBlock.transferObjects(returnValues, wallet.address);
+
+      const { signature, transactionBlockBytes } =
+        await signTransactionBlock.mutateAsync({
+          transactionBlock: transactionBlock,
+        });
+
+      const tx = await suiClient.executeTransactionBlock({
+        signature,
+        transactionBlock: transactionBlockBytes,
+        requestType: 'WaitForEffectsCert',
+        options: { showEffects: true },
+      });
+
+      throwTXIfNotSuccessful(tx);
+      showTXSuccessToast(tx);
+    } finally {
+      mutate();
+    }
   };
 
   const redeem = async () => {};
