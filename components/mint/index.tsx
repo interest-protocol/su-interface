@@ -9,6 +9,7 @@ import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
+import { useWeb3 } from '@/context/web3';
 import { FixedPointMath } from '@/lib';
 import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
 
@@ -19,6 +20,7 @@ const Mint: FC = () => {
   const wallet = useCurrentAccount();
   const [isLoading, setLoading] = useState(false);
   const signTransactionBlock = useSignTransactionBlock();
+  const { mutate } = useWeb3();
 
   const mint = async () => {
     try {
@@ -51,6 +53,7 @@ const Mint: FC = () => {
 
       showTXSuccessToast(tx);
     } finally {
+      mutate();
       setLoading(false);
     }
   };

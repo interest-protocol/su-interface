@@ -1,7 +1,7 @@
 import { CoinMetadata, CoinStruct } from '@mysten/sui.js/client';
 import BigNumber from 'bignumber.js';
 
-type Type = `0x${string}`;
+export type Type = `0x${string}`;
 
 interface CoinObject extends Pick<CoinMetadata, 'symbol' | 'decimals'> {
   digest?: string;

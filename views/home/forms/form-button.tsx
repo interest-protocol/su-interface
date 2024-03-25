@@ -6,14 +6,19 @@ import {
 } from '@mysten/dapp-kit';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui.js/utils';
-import { getCoinOfValue } from '@polymedia/suits';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
+import { useWeb3 } from '@/context/web3';
+import { Type } from '@/context/web3/web3.types';
 import { FixedPointMath } from '@/lib';
-import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
+import {
+  getCoinOfValue,
+  showTXSuccessToast,
+  throwTXIfNotSuccessful,
+} from '@/utils';
 import { requestPriceOracle } from '@/utils/oracle';
 
 import { FormTypeEnum, SuForm } from './forms.types';
@@ -22,6 +27,8 @@ const FormButton: FC = () => {
   const suiClient = useSuiClient();
   const wallet = useCurrentAccount();
   const { control } = useFormContext<SuForm>();
+  const [loading, setLoading] = useState(false);
+  const web3 = useWeb3();
 
   const signTransactionBlock = useSignTransactionBlock();
 
@@ -41,28 +48,27 @@ const FormButton: FC = () => {
     const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
 
     const isFMint = !!form.fSui?.active;
-
-    const base_in = await getCoinOfValue(
-      suiClient,
+    console.log(isFMint);
+    const base_in = getCoinOfValue({
       txb,
-      wallet.address,
-      `${OBJECT_IDS.SU}::i_sui::I_SUI`,
-      BigInt(amount.toString())
-    );
+      coinType: `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type,
+      coinValue: BigInt(amount.toString()),
+      coinsMap: web3.coinsMap,
+    });
 
-    const [transactionBlock, price] = requestPriceOracle(txb);
+    const price = requestPriceOracle(txb);
 
-    const [coinOut, coinExtra] = transactionBlock.moveCall({
+    const [coinOut, coinExtra] = txb.moveCall({
       target: `${OBJECT_IDS.SU}::vault::${
         isFMint ? 'mint_f_coin' : 'mint_x_coin'
       }`,
       arguments: [
-        transactionBlock.object(OBJECT_IDS.VAULT),
-        transactionBlock.object(OBJECT_IDS.TREASURY),
-        transactionBlock.object(SUI_CLOCK_OBJECT_ID),
+        txb.object(OBJECT_IDS.VAULT),
+        txb.object(OBJECT_IDS.TREASURY),
+        txb.object(SUI_CLOCK_OBJECT_ID),
         base_in,
         price,
-        transactionBlock.pure('0'),
+        txb.pure('0'),
       ],
     });
 
@@ -70,11 +76,11 @@ const FormButton: FC = () => {
 
     if (!isFMint) returnValues.push(coinExtra);
 
-    transactionBlock.transferObjects(returnValues, wallet.address);
+    txb.transferObjects(returnValues, wallet.address);
 
     const { signature, transactionBlockBytes } =
       await signTransactionBlock.mutateAsync({
-        transactionBlock: transactionBlock,
+        transactionBlock: txb,
       });
 
     const tx = await suiClient.executeTransactionBlock({
@@ -108,35 +114,36 @@ const FormButton: FC = () => {
 
       const amount = FixedPointMath.toBigNumber(valueIn || 0);
 
-      const coinIn = await getCoinOfValue(
-        suiClient,
+      const coinIn = getCoinOfValue({
+        coinType: `${OBJECT_IDS.SU}::${
+          isFRedeem ? 'f_sui::F_SUI' : 'x_sui::X_SUI'
+        }` as Type,
+        coinValue: BigInt(amount.toString()),
+        coinsMap: web3.coinsMap,
         txb,
-        wallet.address,
-        `${OBJECT_IDS.SU}::${isFRedeem ? 'f_sui::F_SUI' : 'x_sui::X_SUI'}`,
-        BigInt(amount.toString())
-      );
+      });
 
-      const [transactionBlock, price] = requestPriceOracle(txb);
+      const price = requestPriceOracle(txb);
 
-      const [coinOut] = transactionBlock.moveCall({
+      const [coinOut] = txb.moveCall({
         target: `${OBJECT_IDS.SU}::vault::${
           isFRedeem ? 'redeem_f_coin' : 'redeem_x_coin'
         }`,
         arguments: [
-          transactionBlock.object(OBJECT_IDS.VAULT),
-          transactionBlock.object(OBJECT_IDS.TREASURY),
-          transactionBlock.object(SUI_CLOCK_OBJECT_ID),
+          txb.object(OBJECT_IDS.VAULT),
+          txb.object(OBJECT_IDS.TREASURY),
+          txb.object(SUI_CLOCK_OBJECT_ID),
           coinIn,
           price,
-          transactionBlock.pure('0'),
+          txb.pure('0'),
         ],
       });
 
-      transactionBlock.transferObjects([coinOut], wallet.address);
+      txb.transferObjects([coinOut], wallet.address);
 
       const { signature, transactionBlockBytes } =
         await signTransactionBlock.mutateAsync({
-          transactionBlock: transactionBlock,
+          transactionBlock: txb,
         });
 
       const tx = await suiClient.executeTransactionBlock({
@@ -158,7 +165,10 @@ const FormButton: FC = () => {
     toast.promise(mint(), {
       loading: 'Minting...',
       success: 'Minted successfully',
-      error: 'Fail on Mint',
+      error: (e) => {
+        console.log(e);
+        return 'Fail on Mint';
+      },
     });
 
   const onRedeem = () =>
