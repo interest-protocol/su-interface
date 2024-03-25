@@ -146,7 +146,7 @@ const Indicators: FC = () => {
             {isLoading ? (
               <Skeleton width="7.5rem" />
             ) : (
-              `${data ? computeCollateralRatio(data) : 0}%`
+              `${data ? computeCollateralRatio(data).toFixed(2) : 0}%`
             )}
           </Typography>
         </Box>
