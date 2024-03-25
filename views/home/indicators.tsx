@@ -38,7 +38,8 @@ const Indicators: FC = () => {
               formatMoney(
                 data
                   ? FixedPointMath.toNumber(data.baseBalance ?? ZERO_BIG_NUMBER)
-                  : 0
+                  : 0,
+                2
               )
             )}
           </Typography>
@@ -63,7 +64,8 @@ const Indicators: FC = () => {
                 formatMoney(
                   FixedPointMath.toNumber(
                     data ? data.baseBalanceCap : ZERO_BIG_NUMBER
-                  )
+                  ),
+                  2
                 )
               )}
             </Typography>
@@ -86,7 +88,8 @@ const Indicators: FC = () => {
               <Skeleton width="5rem" />
             ) : (
               formatMoney(
-                FixedPointMath.toNumber(data ? data.fSupply : ZERO_BIG_NUMBER)
+                FixedPointMath.toNumber(data ? data.fSupply : ZERO_BIG_NUMBER),
+                2
               )
             )}
           </Typography>
@@ -107,7 +110,8 @@ const Indicators: FC = () => {
             <Skeleton width="5rem" />
           ) : (
             formatMoney(
-              FixedPointMath.toNumber(data ? data.xSupply : ZERO_BIG_NUMBER)
+              FixedPointMath.toNumber(data ? data.xSupply : ZERO_BIG_NUMBER),
+              2
             )
           )}
         </Typography>
@@ -146,7 +150,7 @@ const Indicators: FC = () => {
             {isLoading ? (
               <Skeleton width="7.5rem" />
             ) : (
-              `${data ? computeCollateralRatio(data) : 0}%`
+              `${data ? computeCollateralRatio(data).toFixed(2) : 0}%`
             )}
           </Typography>
         </Box>

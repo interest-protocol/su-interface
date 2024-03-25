@@ -37,7 +37,7 @@ const FormFields: FC = () => {
           tokenName="iSui"
           variant="outline"
           textAlign="right"
-          placeholder="100"
+          placeholder="0"
           Bottom={<FormInputDollar label="iSui" />}
           balance={`${FixedPointMath.toNumber(
             coinsMap[ISUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
@@ -76,7 +76,7 @@ const FormFields: FC = () => {
           tokenName="fSui"
           variant="outline"
           textAlign="right"
-          placeholder="100"
+          placeholder="0"
           active={fSuiActive}
           Bottom={<FormInputDollar label="fSui" />}
           activeBg="linear-gradient(46.55deg, rgba(244, 255, 115, 0.8) 4.39%, #01FDFF 96.96%)"
@@ -111,7 +111,7 @@ const FormFields: FC = () => {
           tokenName="xSui"
           variant="outline"
           textAlign="right"
-          placeholder="100"
+          placeholder="0"
           active={xSuiActive}
           Bottom={<FormInputDollar label="xSui" />}
           activeBg="linear-gradient(222.71deg,  #FF6BD6 5.65%, rgba(244, 255, 115, 0.8) 99.55%)"

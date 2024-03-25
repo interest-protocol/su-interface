@@ -6,9 +6,11 @@ import {
 } from '@mysten/dapp-kit';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { FC, useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
 import { FixedPointMath } from '@/lib';
+import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
 
 import { ISuiSVG } from '../svg';
 
@@ -17,6 +19,7 @@ const Mint: FC = () => {
   const wallet = useCurrentAccount();
   const [isLoading, setLoading] = useState(false);
   const signTransactionBlock = useSignTransactionBlock();
+
   const mint = async () => {
     try {
       if (!wallet?.address) throw new Error('Must connect your wallet');
@@ -44,20 +47,31 @@ const Mint: FC = () => {
         options: { showEffects: true },
       });
 
-      console.log(tx);
+      throwTXIfNotSuccessful(tx);
+
+      showTXSuccessToast(tx);
     } catch (e) {
       console.log(e);
     } finally {
       setLoading(false);
     }
   };
+
+  const onMint = () =>
+    toast.promise(mint(), {
+      loading: 'Minting...',
+      success: 'iSui minted!',
+      error: 'Error on mint iSui!',
+    });
+
   return (
     <Button
       p="xs"
-      onClick={mint}
+      onClick={onMint}
       variant="tonal"
       color="onSurface"
       borderRadius="full"
+      disabled={isLoading}
       pl={['l', 'l', 'l', 'l', 'l']}
       SuffixIcon={
         <ISuiSVG maxHeight="1.5rem" maxWidth="1.5rem" width="100%" rounded />
