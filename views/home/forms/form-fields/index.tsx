@@ -14,7 +14,8 @@ import FormInputDollar from './form-input-dollar';
 
 const FormFields: FC = () => {
   const { coinsMap } = useWeb3();
-  const { control, setValue, register } = useFormContext<SuForm>();
+
+  const { control, setValue, register, resetField } = useFormContext<SuForm>();
 
   const formType = useWatch({ control, name: 'formType' });
   const fSuiActive = useWatch({ control, name: 'fSui.active' });
@@ -104,7 +105,7 @@ const FormFields: FC = () => {
             if (!fSuiActive) {
               setValue('fSui.active', true);
               setValue('xSui.active', false);
-              setValue('fSui.value', '' as `${number}`);
+              resetField('xSui.value');
             }
           }}
           TokenIcon={
@@ -148,7 +149,7 @@ const FormFields: FC = () => {
             if (!xSuiActive) {
               setValue('xSui.active', true);
               setValue('fSui.active', false);
-              setValue('fSui.value', '' as `${number}`);
+              resetField('fSui.value');
             }
           }}
           TokenIcon={

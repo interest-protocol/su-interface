@@ -9,9 +9,7 @@ interface Price {
   kind: 'NestedResult';
 }
 
-export const requestPriceOracle = (
-  txb: TransactionBlock
-): [TransactionBlock, Price] => {
+export const requestPriceOracle = (txb: TransactionBlock): Price => {
   const request = txb.moveCall({
     typeArguments: [`${OBJECT_IDS.SU}::oracle::SuOracle`],
     target: `${OBJECT_IDS.SUITEARS}::oracle::request`,
@@ -38,5 +36,5 @@ export const requestPriceOracle = (
     ],
   });
 
-  return [txb, price];
+  return price;
 };

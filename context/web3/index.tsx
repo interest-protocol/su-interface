@@ -26,18 +26,21 @@ export const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
           .getCoins({
             owner: currentAccount?.address,
             coinType: ISUI_TYPE,
+            limit: 50,
           })
           .then(({ data }) => data),
         suiClient
           .getCoins({
             owner: currentAccount?.address,
             coinType: XSUI_TYPE,
+            limit: 50,
           })
           .then(({ data }) => data),
         suiClient
           .getCoins({
             owner: currentAccount?.address,
             coinType: FSUI_TYPE,
+            limit: 50,
           })
           .then(({ data }) => data),
       ]);
