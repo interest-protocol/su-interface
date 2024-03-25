@@ -11,7 +11,7 @@ import useSWR from 'swr';
 
 import { OBJECT_IDS, SU_STATE_V1_DYNAMIC_FIELD_NAME } from '@/constants';
 import useSuiPrice from '@/hooks/use-sui-price';
-import { TreasuryState } from '@/interface';
+import { SuState } from '@/interface';
 
 interface ParseDataArgs {
   treasuryState: SuiObjectResponse;
@@ -25,7 +25,7 @@ const parseData = ({
   treasuryCaps,
   fNav,
   xNav,
-}: ParseDataArgs): TreasuryState => {
+}: ParseDataArgs): SuState => {
   const fields = path(['value', 'fields'], treasuryState);
   return {
     adminBalance: BigNumber(propOr('0', 'admin_balance', fields)),

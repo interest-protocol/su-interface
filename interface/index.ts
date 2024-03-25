@@ -14,7 +14,7 @@ export interface Fees {
   reserve: BigNumber;
 }
 
-export interface TreasuryState {
+export interface SuState {
   adminBalance: BigNumber;
   baseBalance: BigNumber;
   baseBalanceCap: BigNumber;
