@@ -5,7 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import { FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
 import useSuState from '@/hooks/use-su-state';
 import { FixedPointMath } from '@/lib';
-import { computeCollateralRatio, formatMoney } from '@/utils';
+import { computeCollateralRatio, formatMoney, ZERO_BIG_NUMBER } from '@/utils';
 
 const Indicators: FC = () => {
   const { data, isLoading } = useSuState();
@@ -35,7 +35,11 @@ const Indicators: FC = () => {
             {isLoading ? (
               <Skeleton width="7.5rem" />
             ) : (
-              formatMoney(FixedPointMath.toNumber(data.baseBalance))
+              formatMoney(
+                data
+                  ? FixedPointMath.toNumber(data.baseBalance ?? ZERO_BIG_NUMBER)
+                  : 0
+              )
             )}
           </Typography>
           <Box display="flex" alignItems="center" gap="4xl">
@@ -45,7 +49,9 @@ const Indicators: FC = () => {
                 isLoading
                   ? 0
                   : FixedPointMath.toNumber(
-                      data.baseBalance.div(data.baseBalanceCap).times(100)
+                      data
+                        ? data.baseBalance.div(data.baseBalanceCap).times(100)
+                        : ZERO_BIG_NUMBER
                     )
               }
             />
@@ -54,7 +60,11 @@ const Indicators: FC = () => {
               {isLoading ? (
                 <Skeleton width="3rem" height="0.7rem" />
               ) : (
-                formatMoney(FixedPointMath.toNumber(data.baseBalanceCap))
+                formatMoney(
+                  FixedPointMath.toNumber(
+                    data ? data.baseBalanceCap : ZERO_BIG_NUMBER
+                  )
+                )
               )}
             </Typography>
           </Box>
@@ -75,7 +85,9 @@ const Indicators: FC = () => {
             {isLoading ? (
               <Skeleton width="5rem" />
             ) : (
-              formatMoney(FixedPointMath.toNumber(data.fSupply))
+              formatMoney(
+                FixedPointMath.toNumber(data ? data.fSupply : ZERO_BIG_NUMBER)
+              )
             )}
           </Typography>
         </Box>
@@ -94,7 +106,9 @@ const Indicators: FC = () => {
           {isLoading ? (
             <Skeleton width="5rem" />
           ) : (
-            formatMoney(FixedPointMath.toNumber(data.xSupply))
+            formatMoney(
+              FixedPointMath.toNumber(data ? data.xSupply : ZERO_BIG_NUMBER)
+            )
           )}
         </Typography>
       </Box>
@@ -132,7 +146,7 @@ const Indicators: FC = () => {
             {isLoading ? (
               <Skeleton width="7.5rem" />
             ) : (
-              `${computeCollateralRatio(data)}%`
+              `${data ? computeCollateralRatio(data) : 0}%`
             )}
           </Typography>
         </Box>
