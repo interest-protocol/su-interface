@@ -173,10 +173,7 @@ const FormButton: FC = () => {
     toast.promise(mint(), {
       loading: 'Minting...',
       success: 'Minted successfully',
-      error: (e) => {
-        console.log(e);
-        return 'Fail on Mint';
-      },
+      error: 'Fail on Mint',
     });
 
   const onRedeem = () =>

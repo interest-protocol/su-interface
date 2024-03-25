@@ -17,7 +17,9 @@ import ThemeManager from '../theme-manager';
 const queryClient = new QueryClient();
 
 const { networkConfig } = createNetworkConfig({
-  testnet: { url: getFullnodeUrl('testnet') },
+  testnet: {
+    url: process.env.NEXT_PUBLIC_RPC_URL || getFullnodeUrl('testnet'),
+  },
 });
 
 const Provider: FC<PropsWithChildren> = ({ children }) => (
