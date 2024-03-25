@@ -8,14 +8,18 @@ import { formatDollars } from '@/utils';
 import { FormTypeEnum, SuForm } from './forms.types';
 
 const FormHeader: FC = () => {
-  const { control, setValue } = useFormContext<SuForm>();
+  const { control, setValue, resetField } = useFormContext<SuForm>();
 
   const formType = useWatch({ control, name: 'formType' });
   const fSuiPrice = useWatch({ control, name: 'fSui.usdPrice' });
   const xSuiPrice = useWatch({ control, name: 'xSui.usdPrice' });
 
-  const handleChangeTab = (tabIndex: FormTypeEnum) =>
+  const handleChangeTab = (tabIndex: FormTypeEnum) => {
     setValue('formType', tabIndex);
+    resetField('fSui');
+    resetField('xSui');
+    resetField('iSui');
+  };
 
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between">

@@ -89,7 +89,15 @@ const FormFields: FC = () => {
           }
           {...register('fSui.value', {
             onChange: (v) => {
-              setValue('fSui.value', parseInputEventToNumberString(v));
+              setValue(
+                'fSui.value',
+                parseInputEventToNumberString(
+                  v,
+                  FixedPointMath.toNumber(
+                    coinsMap[FSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+                  )
+                )
+              );
             },
           })}
           onActivate={() => {
@@ -124,7 +132,15 @@ const FormFields: FC = () => {
           }
           {...register('xSui.value', {
             onChange: (v) => {
-              setValue('xSui.value', parseInputEventToNumberString(v));
+              setValue(
+                'xSui.value',
+                parseInputEventToNumberString(
+                  v,
+                  FixedPointMath.toNumber(
+                    coinsMap[XSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+                  )
+                )
+              );
             },
           })}
           onActivate={() => {

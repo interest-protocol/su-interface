@@ -12,7 +12,7 @@ const FormInputDollar: FC<FormInputDollarProps> = ({ label }) => {
   const value = useWatch({ control, name: `${label}.value` });
   const usdPrice = useWatch({ control, name: `${label}.usdPrice` });
 
-  const usdValue = Number(value || 0) * (usdPrice ?? 0);
+  const usdValue = +(Number(value || 0) * (usdPrice ?? 0)).toFixed(2);
 
   return (
     <Typography variant="label" size="small" textAlign="right">

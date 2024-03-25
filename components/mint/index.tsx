@@ -50,8 +50,6 @@ const Mint: FC = () => {
       throwTXIfNotSuccessful(tx);
 
       showTXSuccessToast(tx);
-    } catch (e) {
-      console.log(e);
     } finally {
       setLoading(false);
     }
