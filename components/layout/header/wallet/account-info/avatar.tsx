@@ -60,6 +60,7 @@ const Avatar: FC<AvatarProps> = ({ account, withNameOrAddress }) => {
           variant="label"
           color="onSurface"
           width="max-content"
+          fontFamily="inherit"
         >
           {loading ? (
             <Skeleton width="100%" />

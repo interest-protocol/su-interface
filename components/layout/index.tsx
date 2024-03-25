@@ -13,7 +13,13 @@ const Layout: FC<PropsWithChildren> = ({ children }) => (
     flexDirection="column"
   >
     <Header />
-    <Box flex="1" variant="container" width="100%">
+    <Box
+      flex="1"
+      variant="container"
+      width={['unset', 'unset', '100%']}
+      my={['4xl', '4xl', '4xl', '4xl', '4xl']}
+      gap={['xs', 'xs', 'xs', 'xs', 'xs', 'xs']}
+    >
       {children}
     </Box>
     <Footer />

@@ -20,16 +20,12 @@ const UserInfo: FC = () => {
 
   return (
     <>
-      <Box p="l">
-        <Typography size="small" variant="title" color="onSurface">
+      <Box px="l" my="m">
+        <Typography size="large" variant="label" color="onSurface">
           Wallet
         </Typography>
       </Box>
-      <Box
-        color="onSurface"
-        borderBottom={['unset', 'unset', 'unset', '1px solid']}
-        borderColor="outlineVariant"
-      >
+      <Box color="onSurface">
         <ItemWrapper>
           <Box display="flex" justifyContent="space-between" width="100%">
             <Box display="flex" alignItems="center" gap="l">
