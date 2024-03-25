@@ -1,10 +1,8 @@
-import { TreasuryState } from '@/interface';
+import { SuState } from '@/interface';
 import { FixedPointMath } from '@/lib';
 import { NINE_DECIMALS_FACTOR } from '@/utils/bignumber';
 
-export const computeCollateralRatio = (
-  treasuryState: TreasuryState
-): number => {
+export const computeCollateralRatio = (treasuryState: SuState): number => {
   const xValue = treasuryState.xNav
     .multipliedBy(treasuryState.xSupply)
     .div(NINE_DECIMALS_FACTOR);
