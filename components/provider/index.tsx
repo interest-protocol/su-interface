@@ -15,6 +15,7 @@ import { Web3Provider } from '@/context/web3';
 import ThemeManager from '../theme-manager';
 
 const queryClient = new QueryClient();
+
 const { networkConfig } = createNetworkConfig({
   testnet: {
     url: process.env.NEXT_PUBLIC_RPC_URL || getFullnodeUrl('testnet'),

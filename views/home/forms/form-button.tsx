@@ -24,11 +24,11 @@ import { requestPriceOracle } from '@/utils/oracle';
 import { FormTypeEnum, SuForm } from './forms.types';
 
 const FormButton: FC = () => {
+  const { mutate, coinsMap } = useWeb3();
   const suiClient = useSuiClient();
   const wallet = useCurrentAccount();
   const { control } = useFormContext<SuForm>();
   const [loading, setLoading] = useState(false);
-  const web3 = useWeb3();
 
   const signTransactionBlock = useSignTransactionBlock();
 
@@ -44,6 +44,8 @@ const FormButton: FC = () => {
       if (!form.iSui || form.iSui.value == '0')
         throw new Error('Cannot mint 0 coins');
 
+      setLoading(true);
+
       const txb = new TransactionBlock();
 
       const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
@@ -52,9 +54,9 @@ const FormButton: FC = () => {
 
       const base_in = getCoinOfValue({
         txb,
+        coinsMap,
+        coinValue: BigInt(amount.decimalPlaces(0).toString()),
         coinType: `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type,
-        coinValue: BigInt(amount.toString()),
-        coinsMap: web3.coinsMap,
       });
 
       const price = requestPriceOracle(txb);
@@ -95,6 +97,7 @@ const FormButton: FC = () => {
       showTXSuccessToast(tx);
     } finally {
       setLoading(false);
+      mutate();
     }
   };
 
@@ -119,12 +122,12 @@ const FormButton: FC = () => {
       const amount = FixedPointMath.toBigNumber(valueIn || 0);
 
       const coinIn = getCoinOfValue({
+        txb,
+        coinsMap,
+        coinValue: BigInt(amount.decimalPlaces(0).toString()),
         coinType: `${OBJECT_IDS.SU}::${
           isFRedeem ? 'f_sui::F_SUI' : 'x_sui::X_SUI'
         }` as Type,
-        coinValue: BigInt(amount.toString()),
-        coinsMap: web3.coinsMap,
-        txb,
       });
 
       const price = requestPriceOracle(txb);
@@ -157,8 +160,11 @@ const FormButton: FC = () => {
         options: { showEffects: true },
       });
 
-      console.log(tx);
+      throwTXIfNotSuccessful(tx);
+
+      showTXSuccessToast(tx);
     } finally {
+      mutate();
       setLoading(false);
     }
   };
@@ -180,13 +186,19 @@ const FormButton: FC = () => {
   return (
     <Box display="flex" justifyContent="center">
       <Button
-        onClick={isMint ? onMint : onRedeem}
-        disabled={disabled}
-        variant="filled"
         bg="white"
+        variant="filled"
         borderRadius="full"
+        disabled={disabled || loading}
+        onClick={isMint ? onMint : onRedeem}
       >
-        {isMint ? 'Mint' : 'Redeem'}
+        {isMint
+          ? loading
+            ? 'Minting'
+            : 'Mint'
+          : loading
+            ? 'Redeeming'
+            : 'Redeem'}
       </Button>
     </Box>
   );
