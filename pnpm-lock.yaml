@@ -20,15 +20,15 @@ dependencies:
   '@mysten/suins-toolkit':
     specifier: ^0.4.4
     version: 0.4.4
+  '@polymedia/suits':
+    specifier: ^0.0.37
+    version: 0.0.37
   '@stylin.js/react':
     specifier: 1.0.5-alpha.0
     version: 1.0.5-alpha.0(@types/react@18.2.38)(react@18.2.0)
   '@tanstack/react-query':
     specifier: ^5.28.4
     version: 5.28.4(react@18.2.0)
-  '@types/ramda':
-    specifier: ^0.29.11
-    version: 0.29.11
   bignumber.js:
     specifier: ^9.1.2
     version: 9.1.2
@@ -79,6 +79,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.9.4
     version: 20.9.4
+  '@types/ramda':
+    specifier: ^0.29.11
+    version: 0.29.11
   '@types/react':
     specifier: ^18.2.38
     version: 18.2.38
@@ -1113,6 +1116,15 @@ packages:
       tslib: 2.6.2
     dev: true
 
+  /@polymedia/suits@0.0.37:
+    resolution:
+      {
+        integrity: sha512-EtUZv0q+JeSdf2Srbwln9JEqor1bZUkUqOs24hwqeHVSFyD9rjgeKMD+l+CstZzRO+UCwVTUk1t/t430KGoAJg==,
+      }
+    dependencies:
+      '@mysten/sui.js': 0.51.0
+    dev: false
+
   /@radix-ui/primitive@1.0.1:
     resolution:
       {
@@ -1936,7 +1948,7 @@ packages:
       }
     dependencies:
       types-ramda: 0.29.9
-    dev: false
+    dev: true
 
   /@types/react-dom@18.2.17:
     resolution:
@@ -6972,7 +6984,7 @@ packages:
       {
         integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==,
       }
-    dev: false
+    dev: true
 
   /tsconfig-paths@3.14.2:
     resolution:
@@ -7106,7 +7118,7 @@ packages:
       }
     dependencies:
       ts-toolbelt: 9.6.0
-    dev: false
+    dev: true
 
   /typescript@5.3.2:
     resolution:

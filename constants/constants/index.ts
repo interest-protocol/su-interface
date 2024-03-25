@@ -13,8 +13,19 @@ export const OBJECT_IDS = {
     '0x4e1929072f793cd684dcd458b0f34af4f9954b3e1298c8f3e7550766c08141a8',
   I_SUI_TREASURY:
     '0x22ca0850ebfefb2067b8658850af70a4943d24867f330941939ca9e6c3e5f4bd',
+  SU_STATE_VERSIONED_ID:
+    '0x3f2d3ba495b3dd0416de758a4abd4215d7f8b7dfba7cd7be32c1962a42bd8b93',
+  F_SUI_TREASURY_CAP:
+    '0x41fea40036ac51bdd295fbab85ac71865259dfccaf81476a8efee10b81b1221e',
+  X_SUI_TREASURY_CAP:
+    '0xd585ab6b816ae31d73e64a54f1a4c2f0f2ece2b83c79650d6686f56772bd354c',
 };
 
 export const WITNESSES = {
   SU_ORACLE: `${OBJECT_IDS.SU}::oracle::SuOracle`,
+};
+
+export const SU_STATE_V1_DYNAMIC_FIELD_NAME = {
+  type: 'u64',
+  value: '1',
 };
