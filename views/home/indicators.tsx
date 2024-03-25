@@ -1,15 +1,14 @@
 import { Box, ProgressIndicator, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 import { FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
 import useSuState from '@/hooks/use-su-state';
 import { FixedPointMath } from '@/lib';
-import { computeCollateralRatio, formatMoney } from '@/utils';
+import { computeCollateralRatio, formatMoney, ZERO_BIG_NUMBER } from '@/utils';
 
 const Indicators: FC = () => {
-  const { data, isLoading, error } = useSuState();
-
-  if (!data || isLoading) return <div>loading...</div>;
+  const { data, isLoading } = useSuState();
 
   return (
     <Box
@@ -33,12 +32,40 @@ const Indicators: FC = () => {
         <ISuiSVG rounded height="100%" maxWidth="2.5rem" maxHeight="3rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {formatMoney(FixedPointMath.toNumber(data.baseBalance))}
+            {isLoading ? (
+              <Skeleton width="7.5rem" />
+            ) : (
+              formatMoney(
+                data
+                  ? FixedPointMath.toNumber(data.baseBalance ?? ZERO_BIG_NUMBER)
+                  : 0
+              )
+            )}
           </Typography>
           <Box display="flex" alignItems="center" gap="4xl">
-            <ProgressIndicator variant="bar" value={20} />
+            <ProgressIndicator
+              variant="bar"
+              value={
+                isLoading
+                  ? 0
+                  : FixedPointMath.toNumber(
+                      data
+                        ? data.baseBalance.div(data.baseBalanceCap).times(100)
+                        : ZERO_BIG_NUMBER
+                    )
+              }
+            />
             <Typography variant="label" size="medium" whiteSpace="nowrap">
-              Max. {formatMoney(FixedPointMath.toNumber(data.baseBalanceCap))}
+              Max.{' '}
+              {isLoading ? (
+                <Skeleton width="3rem" height="0.7rem" />
+              ) : (
+                formatMoney(
+                  FixedPointMath.toNumber(
+                    data ? data.baseBalanceCap : ZERO_BIG_NUMBER
+                  )
+                )
+              )}
             </Typography>
           </Box>
         </Box>
@@ -55,7 +82,13 @@ const Indicators: FC = () => {
         <FSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {formatMoney(FixedPointMath.toNumber(data.fSupply))}
+            {isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(
+                FixedPointMath.toNumber(data ? data.fSupply : ZERO_BIG_NUMBER)
+              )
+            )}
           </Typography>
         </Box>
       </Box>
@@ -70,14 +103,14 @@ const Indicators: FC = () => {
       >
         <XSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Typography variant="headline" size="large">
-          {formatMoney(FixedPointMath.toNumber(data.xSupply))}
+          {isLoading ? (
+            <Skeleton width="5rem" />
+          ) : (
+            formatMoney(
+              FixedPointMath.toNumber(data ? data.xSupply : ZERO_BIG_NUMBER)
+            )
+          )}
         </Typography>
-        <Box display="flex" alignItems="center" gap="s">
-          <ProgressIndicator variant="bar" value={20} />
-          <Typography variant="label" size="medium" whiteSpace="nowrap">
-            Max. 20M
-          </Typography>
-        </Box>
       </Box>
       <Box
         p="l"
@@ -110,11 +143,16 @@ const Indicators: FC = () => {
             Collateral Ratio
           </Typography>
           <Typography variant="headline" size="large">
-            {computeCollateralRatio(data)}%
+            {isLoading ? (
+              <Skeleton width="7.5rem" />
+            ) : (
+              `${data ? computeCollateralRatio(data) : 0}%`
+            )}
           </Typography>
         </Box>
       </Box>
     </Box>
   );
 };
+
 export default Indicators;

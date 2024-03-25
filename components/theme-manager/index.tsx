@@ -2,6 +2,7 @@ import { Global } from '@emotion/react';
 import { darkTheme, ThemeProvider } from '@interest-protocol/ui-kit';
 import { FC, PropsWithChildren } from 'react';
 import { Toaster } from 'react-hot-toast';
+import { SkeletonTheme } from 'react-loading-skeleton';
 
 import { GlobalStyles } from '@/styles';
 
@@ -21,8 +22,11 @@ const ThemeManager: FC<PropsWithChildren> = ({ children }) => (
         },
       }}
     />
-    <Global styles={GlobalStyles} />
-    {children}
+
+    <SkeletonTheme baseColor="#99BBFF28" highlightColor="#99BBFF14">
+      <Global styles={GlobalStyles} />
+      {children}
+    </SkeletonTheme>
   </ThemeProvider>
 );
 
