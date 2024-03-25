@@ -99,6 +99,10 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
               colors[variant === 'outline' ? 'outlineVariant' : 'container']
           }
           {...fieldProps}
+          {...(onActivate &&
+            !active && {
+              onClick: onActivate,
+            })}
         >
           <Box
             p="xs"
@@ -145,6 +149,10 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
               nPlaceholder={{
                 color: '#6F6F73',
               }}
+              {...(onActivate &&
+                !active && {
+                  pointerEvents: 'none',
+                })}
               {...props}
             />
             {Bottom}
@@ -171,7 +179,6 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
               cursor="pointer"
               borderRadius="full"
               alignItems="center"
-              onClick={onActivate}
               justifyContent="center"
               bg={active ? activeBg : 'white'}
             >
