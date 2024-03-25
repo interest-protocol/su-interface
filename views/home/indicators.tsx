@@ -3,9 +3,12 @@ import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
 import { FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
+import useSuState from '@/hooks/use-su-state';
+import { FixedPointMath } from '@/lib';
+import { computeCollateralRatio, formatMoney } from '@/utils';
 
 const Indicators: FC = () => {
-  const loading = true;
+  const { data, isLoading } = useSuState();
 
   return (
     <Box
@@ -29,12 +32,30 @@ const Indicators: FC = () => {
         <ISuiSVG rounded height="100%" maxWidth="2.5rem" maxHeight="3rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {loading ? <Skeleton width="7.5rem" /> : 59.09}
+            {isLoading ? (
+              <Skeleton width="7.5rem" />
+            ) : (
+              formatMoney(FixedPointMath.toNumber(data.baseBalance))
+            )}
           </Typography>
           <Box display="flex" alignItems="center" gap="4xl">
-            <ProgressIndicator variant="bar" value={loading ? 0 : 20} />
+            <ProgressIndicator
+              variant="bar"
+              value={
+                isLoading
+                  ? 0
+                  : FixedPointMath.toNumber(
+                      data.baseBalance.div(data.baseBalanceCap).times(100)
+                    )
+              }
+            />
             <Typography variant="label" size="medium" whiteSpace="nowrap">
-              Max. {loading ? <Skeleton width="3rem" height="0.7rem" /> : 1000}
+              Max.{' '}
+              {isLoading ? (
+                <Skeleton width="3rem" height="0.7rem" />
+              ) : (
+                formatMoney(FixedPointMath.toNumber(data.baseBalanceCap))
+              )}
             </Typography>
           </Box>
         </Box>
@@ -51,7 +72,11 @@ const Indicators: FC = () => {
         <FSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {loading ? <Skeleton width="5rem" /> : '1M'}
+            {isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(FixedPointMath.toNumber(data.fSupply))
+            )}
           </Typography>
         </Box>
       </Box>
@@ -66,7 +91,11 @@ const Indicators: FC = () => {
       >
         <XSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Typography variant="headline" size="large">
-          {loading ? <Skeleton width="5rem" /> : 500}
+          {isLoading ? (
+            <Skeleton width="5rem" />
+          ) : (
+            formatMoney(FixedPointMath.toNumber(data.xSupply))
+          )}
         </Typography>
       </Box>
       <Box
@@ -100,7 +129,11 @@ const Indicators: FC = () => {
             Collateral Ratio
           </Typography>
           <Typography variant="headline" size="large">
-            {loading ? <Skeleton width="7.5rem" /> : '312.53%'}
+            {isLoading ? (
+              <Skeleton width="7.5rem" />
+            ) : (
+              `${computeCollateralRatio(data)}%`
+            )}
           </Typography>
         </Box>
       </Box>

@@ -16,6 +16,8 @@ export const parseToPositiveStringNumber = (x: string): string => {
 
 export const ZERO_BIG_NUMBER = new BigNumber(0);
 
+export const NINE_DECIMALS_FACTOR = new BigNumber(1_000_000_000);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isBigNumberish(value: any): value is BigNumberish {
   return (
