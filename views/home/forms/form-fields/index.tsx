@@ -21,6 +21,11 @@ const FormFields: FC = () => {
   const fSuiActive = useWatch({ control, name: 'fSui.active' });
   const xSuiActive = useWatch({ control, name: 'xSui.active' });
 
+  // TODO: update with the correct value
+  const iSuiStaticValue = '0';
+  const fSuiStaticValue = '0';
+  const xSuiStaticValue = '0';
+
   const handleMax = () => {
     setValue(
       'iSui.value',
@@ -39,16 +44,22 @@ const FormFields: FC = () => {
           tokenName="iSui"
           variant="outline"
           textAlign="right"
+          opacity={!formType ? 1 : 0.7}
+          cursor={!formType ? 'initial' : 'not-allowed'}
+          caretColor={!formType ? 'black' : 'transparent'}
           Bottom={<FormInputDollar label="iSui" />}
           balance={`${FixedPointMath.toNumber(
             coinsMap[ISUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
           )}`}
           {...register('iSui.value', {
             onChange: (v) => {
-              setValue('iSui.value', parseInputEventToNumberString(v));
+              setValue(
+                'iSui.value',
+                formType ? iSuiStaticValue : parseInputEventToNumberString(v)
+              );
             },
           })}
-          {...(!formType && { handleMax: handleMax })}
+          {...(!formType && { handleMax })}
           TokenIcon={
             <ISuiSVG
               width="100%"
@@ -79,6 +90,9 @@ const FormFields: FC = () => {
           variant="outline"
           textAlign="right"
           active={fSuiActive}
+          opacity={formType ? 1 : 0.7}
+          cursor={formType ? 'initial' : 'not-allowed'}
+          caretColor={formType ? 'black' : 'transparent'}
           Bottom={<FormInputDollar label="fSui" />}
           activeBg="linear-gradient(46.55deg, rgba(244, 255, 115, 0.8) 4.39%, #01FDFF 96.96%)"
           balance={
@@ -92,12 +106,14 @@ const FormFields: FC = () => {
             onChange: (v) => {
               setValue(
                 'fSui.value',
-                parseInputEventToNumberString(
-                  v,
-                  FixedPointMath.toNumber(
-                    coinsMap[FSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
-                  )
-                )
+                !formType
+                  ? fSuiStaticValue
+                  : parseInputEventToNumberString(
+                      v,
+                      FixedPointMath.toNumber(
+                        coinsMap[FSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+                      )
+                    )
               );
             },
           })}
@@ -123,7 +139,10 @@ const FormFields: FC = () => {
           variant="outline"
           textAlign="right"
           active={xSuiActive}
+          opacity={formType ? 1 : 0.7}
           Bottom={<FormInputDollar label="xSui" />}
+          cursor={formType ? 'initial' : 'not-allowed'}
+          caretColor={formType ? 'black' : 'transparent'}
           activeBg="linear-gradient(222.71deg,  #FF6BD6 5.65%, rgba(244, 255, 115, 0.8) 99.55%)"
           balance={
             formType
@@ -136,12 +155,14 @@ const FormFields: FC = () => {
             onChange: (v) => {
               setValue(
                 'xSui.value',
-                parseInputEventToNumberString(
-                  v,
-                  FixedPointMath.toNumber(
-                    coinsMap[XSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
-                  )
-                )
+                !formType
+                  ? xSuiStaticValue
+                  : parseInputEventToNumberString(
+                      v,
+                      FixedPointMath.toNumber(
+                        coinsMap[XSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+                      )
+                    )
               );
             },
           })}
