@@ -9,9 +9,10 @@ import BigNumber from 'bignumber.js';
 import { path, pathOr, propOr } from 'ramda';
 import useSWR from 'swr';
 
-import { OBJECT_IDS, SU_STATE_V1_DYNAMIC_FIELD_NAME } from '@/constants';
+import { OBJECT_IDS } from '@/constants';
 import useSuiPrice from '@/hooks/use-sui-price';
 import { SuState } from '@/interface';
+import { FixedPointMath } from '@/lib';
 
 interface ParseDataArgs {
   treasuryState: SuiObjectResponse;
@@ -81,9 +82,17 @@ const useSuState = () => {
   return useSWR(
     useSuState.name + suiUSDPrice.data?.toString(),
     async () => {
-      const fetchTreasuryStatePromise = suiClient.getDynamicFieldObject({
-        parentId: OBJECT_IDS.SU_STATE_VERSIONED_ID,
-        name: SU_STATE_V1_DYNAMIC_FIELD_NAME,
+      const price = suiUSDPrice.data?.toString();
+
+      if (!price) throw new Error('Sui price not found');
+
+      const priceBn = FixedPointMath.toBigNumber(price);
+
+      const fetchTreasuryStatePromise = suiClient.getObject({
+        id: OBJECT_IDS.SU_STATE,
+        options: {
+          showContent: true,
+        },
       });
 
       const fetchTreasuryCapsPromise = suiClient.multiGetObjects({
@@ -96,20 +105,20 @@ const useSuState = () => {
       const fNavTXB = new TransactionBlock();
 
       fNavTXB.moveCall({
-        target: `${OBJECT_IDS.SU}::vault::f_nav`,
+        target: `${OBJECT_IDS.SU}::quote::f_nav`,
         arguments: [
-          fNavTXB.object(OBJECT_IDS.VAULT),
           fNavTXB.object(OBJECT_IDS.TREASURY),
+          fNavTXB.pure(priceBn.toString()),
         ],
       });
 
       const xNavTXB = new TransactionBlock();
 
       xNavTXB.moveCall({
-        target: `${OBJECT_IDS.SU}::vault::x_nav`,
+        target: `${OBJECT_IDS.SU}::quote::x_nav`,
         arguments: [
-          xNavTXB.object(OBJECT_IDS.VAULT),
           xNavTXB.object(OBJECT_IDS.TREASURY),
+          xNavTXB.pure(priceBn.toString()),
         ],
       });
 
