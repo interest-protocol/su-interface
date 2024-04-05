@@ -6,6 +6,7 @@ import { FSuiSVG, XSuiSVG } from '@/components/svg';
 import { TokenField } from '@/components/token-field';
 import { FSUI_TYPE, XSUI_TYPE } from '@/constants';
 import { useWeb3 } from '@/context/web3';
+import { useIsRebalanceMode } from '@/hooks/use-is-rebalance-mode';
 import { useQuoteCall } from '@/hooks/use-quote-call';
 import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
@@ -15,7 +16,7 @@ import FormInputDollar from './form-input-dollar';
 
 const DoubleFields: FC = () => {
   const { coinsMap } = useWeb3();
-
+  const [warningCondition] = useIsRebalanceMode();
   const { control, setValue, register, resetField } = useFormContext<SuForm>();
 
   const formType = useWatch({ control, name: 'formType' });
@@ -48,11 +49,12 @@ const DoubleFields: FC = () => {
         placeholder="--"
         variant="outline"
         textAlign="right"
-        active={fSuiActive}
         opacity={formType ? 1 : 0.7}
+        disabled={warningCondition && !formType}
         Bottom={<FormInputDollar label="fSui" />}
         cursor={formType ? 'initial' : 'not-allowed'}
         caretColor={formType ? 'currentColor' : 'transparent'}
+        active={warningCondition && !formType ? false : fSuiActive}
         activeBg="linear-gradient(46.55deg, rgba(244, 255, 115, 0.8) 4.39%, #01FDFF 96.96%)"
         balance={
           formType
@@ -97,11 +99,12 @@ const DoubleFields: FC = () => {
         placeholder="--"
         variant="outline"
         textAlign="right"
-        active={xSuiActive}
         opacity={formType ? 1 : 0.7}
+        disabled={warningCondition && !!formType}
         Bottom={<FormInputDollar label="xSui" />}
         cursor={formType ? 'initial' : 'not-allowed'}
         caretColor={formType ? 'currentColor' : 'transparent'}
+        active={warningCondition && formType ? false : fSuiActive}
         activeBg="linear-gradient(222.71deg,  #FF6BD6 5.65%, rgba(244, 255, 115, 0.8) 99.55%)"
         balance={
           formType

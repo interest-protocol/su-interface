@@ -11,10 +11,9 @@ const FormsTip: FC = () => {
   const { control } = useFormContext<SuForm>();
 
   const formType = useWatch({ control, name: 'formType' });
+  const isMint = formType === FormTypeEnum.Mint;
 
   if (!warningCondition) return null;
-
-  const isMint = formType === FormTypeEnum.Mint;
 
   return (
     <Box
