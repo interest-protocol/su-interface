@@ -9,20 +9,23 @@ import BigNumber from 'bignumber.js';
 import { path, pathOr, propOr } from 'ramda';
 import useSWR from 'swr';
 
-import { OBJECT_IDS, SU_STATE_V1_DYNAMIC_FIELD_NAME } from '@/constants';
+import { OBJECT_IDS } from '@/constants';
 import useSuiPrice from '@/hooks/use-sui-price';
 import { SuState } from '@/interface';
+import { FixedPointMath } from '@/lib';
 
 interface ParseDataArgs {
   treasuryState: SuiObjectResponse;
   treasuryCaps: SuiObjectResponse[];
   xNav: string;
   fNav: string;
+  vaultState: SuiObjectResponse;
 }
 
 const parseData = ({
   treasuryState,
   treasuryCaps,
+  vaultState,
   fNav,
   xNav,
 }: ParseDataArgs): SuState => {
@@ -70,6 +73,12 @@ const parseData = ({
     ),
     fNav: BigNumber(fNav),
     xNav: BigNumber(xNav),
+    rebalanceCollateralRatio: BigNumber(
+      propOr('0', 'rebalance_collateral_ratio', vaultState)
+    ),
+    stabilityCollateralRatio: BigNumber(
+      propOr('0', 'stability_collateral_ratio', vaultState)
+    ),
   };
 };
 
@@ -81,9 +90,17 @@ const useSuState = () => {
   return useSWR(
     useSuState.name + suiUSDPrice.data?.toString(),
     async () => {
-      const fetchTreasuryStatePromise = suiClient.getDynamicFieldObject({
-        parentId: OBJECT_IDS.SU_STATE_VERSIONED_ID,
-        name: SU_STATE_V1_DYNAMIC_FIELD_NAME,
+      const price = suiUSDPrice.data?.toString();
+
+      if (!price) throw new Error('Sui price not found');
+
+      const priceBn = FixedPointMath.toBigNumber(price);
+
+      const fetchTreasuryStatePromise = suiClient.multiGetObjects({
+        ids: [OBJECT_IDS.SU_STATE, OBJECT_IDS.VAULT],
+        options: {
+          showContent: true,
+        },
       });
 
       const fetchTreasuryCapsPromise = suiClient.multiGetObjects({
@@ -96,20 +113,20 @@ const useSuState = () => {
       const fNavTXB = new TransactionBlock();
 
       fNavTXB.moveCall({
-        target: `${OBJECT_IDS.SU}::vault::f_nav`,
+        target: `${OBJECT_IDS.SU}::quote::f_nav`,
         arguments: [
-          fNavTXB.object(OBJECT_IDS.VAULT),
           fNavTXB.object(OBJECT_IDS.TREASURY),
+          fNavTXB.pure(priceBn.toString()),
         ],
       });
 
       const xNavTXB = new TransactionBlock();
 
       xNavTXB.moveCall({
-        target: `${OBJECT_IDS.SU}::vault::x_nav`,
+        target: `${OBJECT_IDS.SU}::quote::x_nav`,
         arguments: [
-          xNavTXB.object(OBJECT_IDS.VAULT),
           xNavTXB.object(OBJECT_IDS.TREASURY),
+          xNavTXB.pure(priceBn.toString()),
         ],
       });
 
@@ -123,13 +140,15 @@ const useSuState = () => {
         xNavPromise,
       ]);
 
-      const treasuryStateFields = getSuiObjectResponseFields(treasuryState);
+      const treasuryStateFields = getSuiObjectResponseFields(treasuryState[0]);
+      const vaultStateFields = getSuiObjectResponseFields(treasuryState[1]);
 
       return parseData({
         treasuryState: treasuryStateFields,
         treasuryCaps,
         fNav: fNav as unknown as string,
         xNav: xNav as unknown as string,
+        vaultState: vaultStateFields,
       });
     },
     {

@@ -36,7 +36,10 @@ const FormButton: FC = () => {
 
   const isMint = form.formType === FormTypeEnum.Mint;
 
-  const disabled = !form.fSui?.active && !form.xSui?.active;
+  const disabled = !(
+    (form.fSui?.active && Number(form.fSui?.value)) ||
+    (form.xSui?.active && Number(form.xSui?.value))
+  );
 
   const mint = async () => {
     try {

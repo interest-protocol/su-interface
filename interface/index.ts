@@ -29,4 +29,12 @@ export interface SuState {
   xSupply: BigNumber;
   xNav: BigNumber;
   fNav: BigNumber;
+  stabilityCollateralRatio: BigNumber;
+  rebalanceCollateralRatio: BigNumber;
 }
+
+export type QuoteFunctionName =
+  | 'mint_f_coin'
+  | 'mint_x_coin'
+  | 'redeem_f_coin'
+  | 'redeem_x_coin';
