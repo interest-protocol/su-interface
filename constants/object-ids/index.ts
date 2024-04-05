@@ -1,3 +1,5 @@
+import { Type } from '@/context/web3/web3.types';
+
 export const OBJECT_IDS = {
   SU: '0xdb466ec68471df830c313ea1d22de7572e12f0565a27a01d0baf2a7b9cd11300',
   SUITEARS:
@@ -23,6 +25,6 @@ export const OBJECT_IDS = {
 
 export const SUI_CMC_ID = 20947;
 
-export const ISUI_TYPE = `${OBJECT_IDS.SU}::i_sui::I_SUI`;
-export const FSUI_TYPE = `${OBJECT_IDS.SU}::f_sui::F_SUI`;
-export const XSUI_TYPE = `${OBJECT_IDS.SU}::x_sui::X_SUI`;
+export const ISUI_TYPE = `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type;
+export const FSUI_TYPE = `${OBJECT_IDS.SU}::f_sui::F_SUI` as Type;
+export const XSUI_TYPE = `${OBJECT_IDS.SU}::x_sui::X_SUI` as Type;
