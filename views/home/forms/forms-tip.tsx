@@ -1,28 +1,12 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
-import { InfoSVG, LinkArrowSVG, TimesSVG } from '@/components/svg';
-
-const LOCAL_STORAGE_TTP_KEY = 'tip-storage-key';
+import { InfoSVG, LinkArrowSVG } from '@/components/svg';
 
 const FormsTip: FC = () => {
   const warningCondition = true;
-  const [isTipHidden, setTipHidden] = useState(false);
 
-  useEffect(() => {
-    setTipHidden(
-      JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_TTP_KEY) as 'true' | 'false'
-      )
-    );
-  }, []);
-
-  const onClose = () => {
-    setTipHidden(true);
-    localStorage.setItem(LOCAL_STORAGE_TTP_KEY, JSON.stringify(true));
-  };
-
-  if (isTipHidden || !warningCondition) return null;
+  if (!warningCondition) return null;
 
   return (
     <Box
@@ -57,22 +41,7 @@ const FormsTip: FC = () => {
           >
             Learn more
           </Button>
-          <Button variant="tonal" onClick={onClose} borderRadius="full">
-            Dismiss
-          </Button>
         </Box>
-      </Box>
-      <Box
-        height="1.3rem"
-        color="warning"
-        display="flex"
-        cursor="pointer"
-        borderRadius="xs"
-        onClick={onClose}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <TimesSVG maxHeight="1rem" maxWidth="1rem" width="100%" />
       </Box>
     </Box>
   );
