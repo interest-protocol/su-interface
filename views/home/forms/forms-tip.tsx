@@ -33,6 +33,7 @@ const FormsTip: FC = () => {
         </Box>
         <Box display="flex" gap="m">
           <Button
+            disabled
             variant="tonal"
             borderRadius="full"
             SuffixIcon={
