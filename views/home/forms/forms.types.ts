@@ -1,7 +1,25 @@
+import { QuoteFunctionName } from '@/interface';
+
 export enum FormTypeEnum {
   Mint,
   Redeem,
 }
+
+interface GetFeeValueAndFunctionArgs {
+  formType: FormTypeEnum;
+  iSui: Field;
+  xSui: SuField;
+  fSui: SuField;
+}
+
+interface GetFeeValueAndFunctionReturn {
+  functionName: QuoteFunctionName;
+  value: string;
+}
+
+export type GetFeeValueAndFunction = (
+  args: GetFeeValueAndFunctionArgs
+) => GetFeeValueAndFunctionReturn;
 
 interface Field {
   usdPrice: number;

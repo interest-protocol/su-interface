@@ -30,3 +30,9 @@ export interface SuState {
   xNav: BigNumber;
   fNav: BigNumber;
 }
+
+export type QuoteFunctionName =
+  | 'mint_f_coin'
+  | 'mint_x_coin'
+  | 'redeem_f_coin'
+  | 'redeem_x_coin';

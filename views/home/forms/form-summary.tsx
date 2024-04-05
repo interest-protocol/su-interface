@@ -3,8 +3,12 @@ import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { FSuiSVG, ISuiSVG, XSuiSVG } from '@/components/svg';
+import { useQuoteCall } from '@/hooks/use-quote-call';
+import { FixedPointMath } from '@/lib';
+import { formatDollars, formatMoney } from '@/utils';
+import { getQuoteCallArgs } from '@/views/home/forms/forms.utils';
 
-import { SuForm } from './forms.types';
+import { FormTypeEnum, SuForm } from './forms.types';
 
 const ICONS = {
   iSui: ISuiSVG,
@@ -17,14 +21,38 @@ const FormSummary: FC = () => {
   const formType = useWatch({ control, name: 'formType' });
   const xSui = useWatch({ control, name: 'xSui' });
   const fSui = useWatch({ control, name: 'fSui' });
+  const iSui = useWatch({ control, name: 'iSui' });
 
-  const targetSymbol = formType
-    ? 'iSui'
-    : xSui.active
-      ? 'xSui'
-      : fSui.active
-        ? 'fSui'
-        : null;
+  const { data, isLoading } = useQuoteCall(
+    getQuoteCallArgs({
+      formType,
+      fSui,
+      xSui,
+      iSui,
+    })
+  );
+
+  if (isLoading || !data) return <div>is loading...</div>;
+
+  const targetSymbol =
+    formType === FormTypeEnum.Redeem
+      ? 'iSui'
+      : xSui.active
+        ? 'xSui'
+        : fSui.active
+          ? 'fSui'
+          : null;
+
+  const activeAsset =
+    formType === FormTypeEnum.Redeem
+      ? iSui
+      : xSui.active
+        ? xSui
+        : fSui.active
+          ? fSui
+          : null;
+
+  const usdPrice = activeAsset ? activeAsset.usdPrice : 0;
 
   const Icon = targetSymbol ? ICONS[targetSymbol] : () => null;
 
@@ -48,7 +76,7 @@ const FormSummary: FC = () => {
           Mint Fee:
         </Typography>
         <Box bg="lowContainer" borderRadius="xs" px="m" py="s">
-          0.00%
+          {FixedPointMath.toNumber(data.feePercent)}%
         </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -65,7 +93,8 @@ const FormSummary: FC = () => {
           alignItems="center"
         >
           <Typography size="large" variant="body" whiteSpace="nowrap">
-            19x {targetSymbol} ($32)
+            {formatMoney(FixedPointMath.toNumber(data.valueOut))} {targetSymbol}{' '}
+            ({formatDollars(FixedPointMath.toNumber(data.valueOut) * usdPrice)})
           </Typography>
           <Icon
             rounded
