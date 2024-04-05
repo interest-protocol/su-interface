@@ -38,7 +38,7 @@ const FormButton: FC = () => {
 
   const disabled = !(
     (form.fSui?.active && Number(form.fSui?.value)) ||
-    (form.xSui?.active && Number(form.fSui?.value))
+    (form.xSui?.active && Number(form.xSui?.value))
   );
 
   const mint = async () => {

@@ -18,6 +18,7 @@ const Indicators: FC = () => {
       display="grid"
       gridTemplateColumns="1fr 1fr"
       gridColumn={['1/-1', '1/-1', '1/5']}
+      gridTemplateRows="12.5rem 12.5rem 12.5rem"
     >
       <Box
         p="l"

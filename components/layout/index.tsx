@@ -15,6 +15,7 @@ const Layout: FC<PropsWithChildren> = ({ children }) => (
     <Header />
     <Box
       flex="1"
+      alignItems="start"
       variant="container"
       width={['unset', 'unset', '100%']}
       my={['4xl', '4xl', '4xl', '4xl', '4xl']}

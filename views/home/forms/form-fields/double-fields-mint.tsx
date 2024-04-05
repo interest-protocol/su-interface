@@ -9,17 +9,16 @@ import { useWeb3 } from '@/context/web3';
 import { useIsRebalanceMode } from '@/hooks/use-is-rebalance-mode';
 import { useQuoteCall } from '@/hooks/use-quote-call';
 import { FixedPointMath } from '@/lib';
-import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
+import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { SuForm } from '../forms.types';
 import FormInputDollar from './form-input-dollar';
 
-const DoubleFields: FC = () => {
+const DoubleFieldsMint: FC = () => {
   const { coinsMap } = useWeb3();
   const [warningCondition] = useIsRebalanceMode();
   const { control, setValue, register, resetField } = useFormContext<SuForm>();
 
-  const formType = useWatch({ control, name: 'formType' });
   const iSuiValue = useWatch({ control, name: 'iSui.value' });
   const fSuiActive = useWatch({ control, name: 'fSui.active' });
   const xSuiActive = useWatch({ control, name: 'xSui.active' });
@@ -43,47 +42,33 @@ const DoubleFields: FC = () => {
     : '0';
 
   return (
-    <Box display="flex" gap="s" flexDirection="column" order={formType && -1}>
+    <Box display="flex" gap="s" flexDirection="column">
       <TokenField
+        opacity="0.7"
         tokenName="fSui"
         placeholder="--"
         variant="outline"
         textAlign="right"
-        opacity={formType ? 1 : 0.7}
-        disabled={warningCondition && !formType}
+        cursor="not-allowed"
+        caretColor="transparent"
+        disabled={warningCondition}
         Bottom={<FormInputDollar label="fSui" />}
-        cursor={formType ? 'initial' : 'not-allowed'}
-        caretColor={formType ? 'currentColor' : 'transparent'}
-        active={warningCondition && !formType ? false : fSuiActive}
+        active={warningCondition ? false : fSuiActive}
         activeBg="linear-gradient(46.55deg, rgba(244, 255, 115, 0.8) 4.39%, #01FDFF 96.96%)"
-        balance={
-          formType
-            ? `${FixedPointMath.toNumber(
-                coinsMap[FSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
-              )}`
-            : ''
-        }
+        balance={`${FixedPointMath.toNumber(
+          coinsMap[FSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+        )}`}
         {...register('fSui.value', {
-          onChange: (v) => {
-            setValue(
-              'fSui.value',
-              !formType
-                ? fSuiStaticValue
-                : parseInputEventToNumberString(
-                    v,
-                    FixedPointMath.toNumber(
-                      coinsMap[FSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
-                    )
-                  )
-            );
+          onChange: () => {
+            setValue('fSui.value', fSuiStaticValue);
           },
         })}
         onActivate={() => {
-          if (!fSuiActive) {
-            setValue('fSui.active', true);
-            setValue('xSui.active', false);
-            resetField('xSui.value');
-          }
+          if (fSuiActive || warningCondition) return;
+
+          setValue('fSui.active', true);
+          setValue('xSui.active', false);
+          resetField('xSui.value');
         }}
         TokenIcon={
           <FSuiSVG
@@ -95,45 +80,30 @@ const DoubleFields: FC = () => {
         }
       />
       <TokenField
+        opacity="0.7"
         tokenName="xSui"
         placeholder="--"
         variant="outline"
         textAlign="right"
-        opacity={formType ? 1 : 0.7}
-        disabled={warningCondition && !!formType}
+        active={xSuiActive}
+        cursor="not-allowed"
+        caretColor="currentColor"
         Bottom={<FormInputDollar label="xSui" />}
-        cursor={formType ? 'initial' : 'not-allowed'}
-        caretColor={formType ? 'currentColor' : 'transparent'}
-        active={warningCondition && formType ? false : fSuiActive}
         activeBg="linear-gradient(222.71deg,  #FF6BD6 5.65%, rgba(244, 255, 115, 0.8) 99.55%)"
-        balance={
-          formType
-            ? `${FixedPointMath.toNumber(
-                coinsMap[XSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
-              )}`
-            : ''
-        }
+        balance={`${FixedPointMath.toNumber(
+          coinsMap[XSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+        )}`}
         {...register('xSui.value', {
-          onChange: (v) => {
-            setValue(
-              'xSui.value',
-              !formType
-                ? xSuiStaticValue
-                : parseInputEventToNumberString(
-                    v,
-                    FixedPointMath.toNumber(
-                      coinsMap[XSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
-                    )
-                  )
-            );
+          onChange: () => {
+            setValue('xSui.value', xSuiStaticValue);
           },
         })}
         onActivate={() => {
-          if (!xSuiActive) {
-            setValue('xSui.active', true);
-            setValue('fSui.active', false);
-            resetField('fSui.value');
-          }
+          if (xSuiActive) return;
+
+          setValue('xSui.active', true);
+          setValue('fSui.active', false);
+          resetField('fSui.value');
         }}
         TokenIcon={
           <XSuiSVG
@@ -148,4 +118,4 @@ const DoubleFields: FC = () => {
   );
 };
 
-export default DoubleFields;
+export default DoubleFieldsMint;

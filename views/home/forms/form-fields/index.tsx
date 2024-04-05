@@ -1,29 +1,39 @@
 import { Box, Button } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ArrowRightSVG } from '@/components/svg';
 
-import DoubleFields from './double-fields';
-import ISuiField from './i-sui-field';
+import { SuForm } from '../forms.types';
+import DoubleFieldsMint from './double-fields-mint';
+import DoubleFieldsRedeem from './double-fields-redeem';
+import ISuiMint from './i-sui-mint';
+import ISuiRedeem from './i-sui-redeem';
 
-const FormFields: FC = () => (
-  <Box gap="l" display="grid" gridTemplateColumns="1fr 3rem 1fr">
-    <ISuiField />
-    <Box display="flex" alignItems="center">
-      <Button
-        p="0"
-        width="2.5rem"
-        height="2.5rem"
-        variant="tonal"
-        borderRadius="full"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <ArrowRightSVG maxWidth="1rem" maxHeight="1rem" height="100%" />
-      </Button>
+const FormFields: FC = () => {
+  const { control } = useFormContext<SuForm>();
+
+  const formType = useWatch({ control, name: 'formType' });
+
+  return (
+    <Box gap="l" display="grid" gridTemplateColumns="1fr 3rem 1fr">
+      {formType ? <DoubleFieldsRedeem /> : <ISuiMint />}
+      <Box display="flex" alignItems="center">
+        <Button
+          p="0"
+          width="2.5rem"
+          height="2.5rem"
+          variant="tonal"
+          borderRadius="full"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <ArrowRightSVG maxWidth="1rem" maxHeight="1rem" height="100%" />
+        </Button>
+      </Box>
+      {formType ? <ISuiRedeem /> : <DoubleFieldsMint />}
     </Box>
-    <DoubleFields />
-  </Box>
-);
+  );
+};
 
 export default FormFields;
