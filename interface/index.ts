@@ -29,6 +29,8 @@ export interface SuState {
   xSupply: BigNumber;
   xNav: BigNumber;
   fNav: BigNumber;
+  stabilityCollateralRatio: BigNumber;
+  rebalanceCollateralRatio: BigNumber;
 }
 
 export type QuoteFunctionName =

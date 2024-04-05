@@ -19,11 +19,13 @@ interface ParseDataArgs {
   treasuryCaps: SuiObjectResponse[];
   xNav: string;
   fNav: string;
+  vaultState: SuiObjectResponse;
 }
 
 const parseData = ({
   treasuryState,
   treasuryCaps,
+  vaultState,
   fNav,
   xNav,
 }: ParseDataArgs): SuState => {
@@ -71,6 +73,12 @@ const parseData = ({
     ),
     fNav: BigNumber(fNav),
     xNav: BigNumber(xNav),
+    rebalanceCollateralRatio: BigNumber(
+      propOr('0', 'rebalance_collateral_ratio', vaultState)
+    ),
+    stabilityCollateralRatio: BigNumber(
+      propOr('0', 'stability_collateral_ratio', vaultState)
+    ),
   };
 };
 
@@ -88,8 +96,8 @@ const useSuState = () => {
 
       const priceBn = FixedPointMath.toBigNumber(price);
 
-      const fetchTreasuryStatePromise = suiClient.getObject({
-        id: OBJECT_IDS.SU_STATE,
+      const fetchTreasuryStatePromise = suiClient.multiGetObjects({
+        ids: [OBJECT_IDS.SU_STATE, OBJECT_IDS.VAULT],
         options: {
           showContent: true,
         },
@@ -132,13 +140,15 @@ const useSuState = () => {
         xNavPromise,
       ]);
 
-      const treasuryStateFields = getSuiObjectResponseFields(treasuryState);
+      const treasuryStateFields = getSuiObjectResponseFields(treasuryState[0]);
+      const vaultStateFields = getSuiObjectResponseFields(treasuryState[1]);
 
       return parseData({
         treasuryState: treasuryStateFields,
         treasuryCaps,
         fNav: fNav as unknown as string,
         xNav: xNav as unknown as string,
+        vaultState: vaultStateFields,
       });
     },
     {

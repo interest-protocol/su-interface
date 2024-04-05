@@ -5,6 +5,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import useSuState from '@/hooks/use-su-state';
 import useSuiPrice from '@/hooks/use-sui-price';
 import { FixedPointMath } from '@/lib';
+import FormsTip from '@/views/home/forms/forms-tip';
 
 import FormButton from './form-button';
 import FormFields from './form-fields';
@@ -52,7 +53,7 @@ const Forms: FC = () => {
     <FormProvider {...form}>
       <Box display="flex" flexDirection="column" gap="3xl">
         <FormHeader />
-
+        <FormsTip />
         <FormFields />
         <FormSummary />
         <FormButton />
