@@ -52,7 +52,7 @@ const DoubleFields: FC = () => {
         opacity={formType ? 1 : 0.7}
         Bottom={<FormInputDollar label="fSui" />}
         cursor={formType ? 'initial' : 'not-allowed'}
-        caretColor={formType ? 'black' : 'transparent'}
+        caretColor={formType ? 'currentColor' : 'transparent'}
         activeBg="linear-gradient(46.55deg, rgba(244, 255, 115, 0.8) 4.39%, #01FDFF 96.96%)"
         balance={
           formType
@@ -101,7 +101,7 @@ const DoubleFields: FC = () => {
         opacity={formType ? 1 : 0.7}
         Bottom={<FormInputDollar label="xSui" />}
         cursor={formType ? 'initial' : 'not-allowed'}
-        caretColor={formType ? 'black' : 'transparent'}
+        caretColor={formType ? 'currentColor' : 'transparent'}
         activeBg="linear-gradient(222.71deg,  #FF6BD6 5.65%, rgba(244, 255, 115, 0.8) 99.55%)"
         balance={
           formType

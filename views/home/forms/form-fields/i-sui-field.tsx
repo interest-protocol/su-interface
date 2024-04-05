@@ -58,9 +58,9 @@ const ISuiField: FC = () => {
         variant="outline"
         textAlign="right"
         opacity={!formType ? 1 : 0.7}
-        cursor={!formType ? 'initial' : 'not-allowed'}
-        caretColor={!formType ? 'black' : 'transparent'}
         Bottom={<FormInputDollar label="iSui" />}
+        cursor={!formType ? 'initial' : 'not-allowed'}
+        caretColor={!formType ? 'currentColor' : 'transparent'}
         balance={`${FixedPointMath.toNumber(
           coinsMap[ISUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
         )}`}
