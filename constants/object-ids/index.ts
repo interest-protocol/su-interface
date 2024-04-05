@@ -20,3 +20,9 @@ export const OBJECT_IDS = {
   X_SUI_TREASURY_CAP:
     '0xd9baddab6aec8e3da594b0f0dfe256cb1c7197f10913f3a188ff7c850543a46d',
 };
+
+export const SUI_CMC_ID = 20947;
+
+export const ISUI_TYPE = `${OBJECT_IDS.SU}::i_sui::I_SUI`;
+export const FSUI_TYPE = `${OBJECT_IDS.SU}::f_sui::F_SUI`;
+export const XSUI_TYPE = `${OBJECT_IDS.SU}::x_sui::X_SUI`;
