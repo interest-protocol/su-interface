@@ -18,7 +18,7 @@ export const SOCIAL_MEDIA = [
   },
   {
     title: 'X',
-    link: 'https://x.com/interest_dinero',
+    link: 'https://x.com/IPXSui',
     Icon: XSVG,
   },
 ];
