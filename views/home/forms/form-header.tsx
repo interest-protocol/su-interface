@@ -29,14 +29,20 @@ const FormHeader: FC = () => {
   };
 
   return (
-    <Box display="flex" alignItems="center" justifyContent="space-between">
+    <Box
+      gap="l"
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      flexDirection={['column-reverse', 'row']}
+    >
       <Tabs
         type="circle"
         defaultTabIndex={formType}
         items={['Mint', 'Redeem']}
         onChangeTab={handleChangeTab}
       />
-      <Box display="flex" gap="xs">
+      <Box display="flex" gap="xs" flexDirection={['column', 'column', 'row']}>
         <Tag
           gap="2xs"
           bg="black"

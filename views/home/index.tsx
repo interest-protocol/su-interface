@@ -14,7 +14,7 @@ const Home: FC = () => (
       border="1px solid"
       bg="lowestContainer"
       borderColor="lowContainer"
-      gridColumn={['1/-1', '1/-1', '5/-1']}
+      gridColumn={['1/-1', '1/-1', '1/-1', '5/-1']}
     >
       <Forms />
     </Box>
