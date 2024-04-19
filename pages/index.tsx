@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
 
 import Layout from '@/components/layout';
-import Swap from '@/views/home';
+import Home from '@/views/home';
 
-const SwapPage: NextPage = () => (
+const HomePage: NextPage = () => (
   <Layout>
-    <Swap />
+    <Home />
   </Layout>
 );
 
-export default SwapPage;
+export default HomePage;

@@ -16,9 +16,18 @@ const FormFields: FC = () => {
   const formType = useWatch({ control, name: 'formType' });
 
   return (
-    <Box gap="l" display="grid" gridTemplateColumns="1fr 3rem 1fr">
+    <Box
+      gap="l"
+      display="grid"
+      gridTemplateColumns={['1fr', '1fr', '1fr', '1fr 3rem 1fr']}
+    >
       {formType ? <DoubleFieldsRedeem /> : <ISuiMint />}
-      <Box display="flex" alignItems="center">
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        rotate={['90deg', '90deg', '90deg', 'unset']}
+      >
         <Button
           p="0"
           width="2.5rem"
