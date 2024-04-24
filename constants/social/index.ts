@@ -3,7 +3,7 @@ import { DiscordSVG, GithubSVG, TelegramSVG, XSVG } from '@/components/svg';
 export const SOCIAL_MEDIA = [
   {
     title: 'Discord',
-    link: 'https://discord.com/invite/interest',
+    link: 'https://discord.com/invite/interestprotocol',
     Icon: DiscordSVG,
   },
   {
