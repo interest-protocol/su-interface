@@ -9,6 +9,7 @@ const Home: FC = () => (
     <Indicators />
     <Box
       p="2xl"
+      ml="s"
       width="100%"
       borderRadius="m"
       border="1px solid"
