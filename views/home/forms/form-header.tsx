@@ -83,7 +83,7 @@ const FormHeader: FC = () => {
           }
         >
           <Typography variant="label" size="large">
-            DSui: {formatDollars(+dSuiPrice.toFixed(4))}
+            SuiD: {formatDollars(+dSuiPrice.toFixed(4))}
           </Typography>
         </Tag>
         <Tag

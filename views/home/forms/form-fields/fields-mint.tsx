@@ -84,7 +84,7 @@ const FieldsMint: FC = () => {
       />
       <TokenField
         opacity="0.7"
-        tokenName="dSui"
+        tokenName="SuiD"
         placeholder="--"
         variant="outline"
         textAlign="right"

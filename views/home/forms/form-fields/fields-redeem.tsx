@@ -68,7 +68,7 @@ const FieldsRedeem: FC = () => {
         }
       />
       <TokenField
-        tokenName="dSui"
+        tokenName="SuiD"
         placeholder="--"
         variant="outline"
         textAlign="right"
