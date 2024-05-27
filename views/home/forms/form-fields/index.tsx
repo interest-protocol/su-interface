@@ -5,8 +5,8 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { ArrowRightSVG } from '@/components/svg';
 
 import { SuForm } from '../forms.types';
-import DoubleFieldsMint from './double-fields-mint';
-import DoubleFieldsRedeem from './double-fields-redeem';
+import DoubleFieldsMint from './fields-mint';
+import DoubleFieldsRedeem from './fields-redeem';
 import ISuiMint from './i-sui-mint';
 import ISuiRedeem from './i-sui-redeem';
 

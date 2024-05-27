@@ -28,6 +28,10 @@ const Forms: FC = () => {
         usdPrice: 0,
         active: false,
       },
+      dSui: {
+        usdPrice: 1,
+        active: false,
+      },
     },
   });
 
@@ -38,6 +42,7 @@ const Forms: FC = () => {
   useEffect(() => {
     if (suiPrice && !!data && !isLoading) {
       form.setValue('iSui.usdPrice', suiPrice);
+      form.setValue('dSui.usdPrice', 1);
       form.setValue(
         'fSui.usdPrice',
         suiPrice * FixedPointMath.toNumber(data.fNav)

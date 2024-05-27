@@ -34,9 +34,10 @@ export interface SuForm {
   iSui: Field;
   fSui: SuField;
   xSui: SuField;
+  dSui: SuField;
   formType: FormTypeEnum;
 }
 
 export interface FormInputDollarProps {
-  label: 'iSui' | 'fSui' | 'xSui';
+  label: 'iSui' | 'fSui' | 'xSui' | 'dSui';
 }

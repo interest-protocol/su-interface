@@ -28,3 +28,4 @@ export const SUI_CMC_ID = 20947;
 export const ISUI_TYPE = `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type;
 export const FSUI_TYPE = `${OBJECT_IDS.SU}::f_sui::F_SUI` as Type;
 export const XSUI_TYPE = `${OBJECT_IDS.SU}::x_sui::X_SUI` as Type;
+export const DSUI_TYPE = `${OBJECT_IDS.SU}::d_sui::D_SUI` as Type;

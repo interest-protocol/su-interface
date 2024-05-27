@@ -2,9 +2,9 @@ import { Box } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { FSuiSVG, XSuiSVG } from '@/components/svg';
+import { DSuiSVG, FSuiSVG, XSuiSVG } from '@/components/svg';
 import { TokenField } from '@/components/token-field';
-import { FSUI_TYPE, XSUI_TYPE } from '@/constants';
+import { DSUI_TYPE, FSUI_TYPE, XSUI_TYPE } from '@/constants';
 import { useWeb3 } from '@/context/web3';
 import { useIsRebalanceMode } from '@/hooks/use-is-rebalance-mode';
 import { FixedPointMath } from '@/lib';
@@ -13,13 +13,14 @@ import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
 import { SuForm } from '../forms.types';
 import FormInputDollar from './form-input-dollar';
 
-const DoubleFieldsRedeem: FC = () => {
+const FieldsRedeem: FC = () => {
   const { coinsMap } = useWeb3();
   const [warningCondition] = useIsRebalanceMode();
   const { control, setValue, register, resetField } = useFormContext<SuForm>();
 
   const fSuiActive = useWatch({ control, name: 'fSui.active' });
   const xSuiActive = useWatch({ control, name: 'xSui.active' });
+  const dSuiActive = useWatch({ control, name: 'dSui.active' });
 
   return (
     <Box display="flex" gap="s" flexDirection="column">
@@ -53,10 +54,55 @@ const DoubleFieldsRedeem: FC = () => {
 
           setValue('fSui.active', true);
           setValue('xSui.active', false);
+          setValue('dSui.active', false);
           resetField('xSui.value');
+          resetField('dSui.value');
         }}
         TokenIcon={
           <FSuiSVG
+            maxWidth="4rem"
+            maxHeight="2.5rem"
+            width="100%"
+            height="100%"
+          />
+        }
+      />
+      <TokenField
+        tokenName="dSui"
+        placeholder="--"
+        variant="outline"
+        textAlign="right"
+        disabled={warningCondition}
+        Bottom={<FormInputDollar label="dSui" />}
+        active={warningCondition ? false : dSuiActive}
+        activeBg="linear-gradient(222.71deg, rgba(241, 243, 247, 0) 5.65%, rgba(87, 143, 255, 0.8) 99.55%), linear-gradient(0deg, #F1F3F7, #F1F3F7)"
+        balance={`${FixedPointMath.toNumber(
+          coinsMap[DSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+        )}`}
+        {...register('dSui.value', {
+          onChange: (v) => {
+            setValue(
+              'dSui.value',
+              parseInputEventToNumberString(
+                v,
+                FixedPointMath.toNumber(
+                  coinsMap[DSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+                )
+              )
+            );
+          },
+        })}
+        onActivate={() => {
+          if (dSuiActive) return;
+
+          setValue('dSui.active', true);
+          setValue('fSui.active', false);
+          setValue('xSui.active', false);
+          resetField('fSui.value');
+          resetField('xSui.value');
+        }}
+        TokenIcon={
+          <DSuiSVG
             maxWidth="4rem"
             maxHeight="2.5rem"
             width="100%"
@@ -94,14 +140,16 @@ const DoubleFieldsRedeem: FC = () => {
 
           setValue('xSui.active', true);
           setValue('fSui.active', false);
+          setValue('dSui.active', false);
           resetField('fSui.value');
+          resetField('dSui.value');
         }}
         TokenIcon={
           <XSuiSVG
-            maxWidth="4rem"
-            maxHeight="2.5rem"
             width="100%"
             height="100%"
+            maxWidth="4rem"
+            maxHeight="2.5rem"
           />
         }
       />
@@ -109,4 +157,4 @@ const DoubleFieldsRedeem: FC = () => {
   );
 };
 
-export default DoubleFieldsRedeem;
+export default FieldsRedeem;

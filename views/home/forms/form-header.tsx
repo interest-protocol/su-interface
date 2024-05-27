@@ -2,7 +2,7 @@ import { Box, Tabs, Tag, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { FSuiSVG, XSuiSVG } from '@/components/svg';
+import { DSuiSVG, FSuiSVG, XSuiSVG } from '@/components/svg';
 import { formatDollars } from '@/utils';
 
 import { FormTypeEnum, SuForm } from './forms.types';
@@ -12,6 +12,7 @@ const FormHeader: FC = () => {
 
   const formType = useWatch({ control, name: 'formType' });
   const fSuiPrice = useWatch({ control, name: 'fSui.usdPrice' });
+  const dSuiPrice = useWatch({ control, name: 'dSui.usdPrice' });
   const xSuiPrice = useWatch({ control, name: 'xSui.usdPrice' });
 
   const handleChangeTab = (tabIndex: FormTypeEnum) => {
@@ -42,7 +43,11 @@ const FormHeader: FC = () => {
         items={['Mint', 'Redeem']}
         onChangeTab={handleChangeTab}
       />
-      <Box display="flex" gap="xs" flexDirection={['column', 'column', 'row']}>
+      <Box
+        gap="xs"
+        display="flex"
+        flexDirection={['column', 'column', 'column', 'column', 'row']}
+      >
         <Tag
           gap="2xs"
           bg="black"
@@ -60,6 +65,25 @@ const FormHeader: FC = () => {
         >
           <Typography variant="label" size="large">
             FSui: {formatDollars(+fSuiPrice.toFixed(4))}
+          </Typography>
+        </Tag>
+        <Tag
+          gap="2xs"
+          bg="black"
+          variant="outline"
+          whiteSpace="nowrap"
+          PrefixIcon={
+            <DSuiSVG
+              maxWidth="1.5rem"
+              maxHeight="1.5rem"
+              height="100%"
+              width="100%"
+              rounded
+            />
+          }
+        >
+          <Typography variant="label" size="large">
+            DSui: {formatDollars(+dSuiPrice.toFixed(4))}
           </Typography>
         </Tag>
         <Tag

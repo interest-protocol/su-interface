@@ -2,7 +2,7 @@ import { Box, ProgressIndicator, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
-import { FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
+import { DSuiSVG, FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
 import useSuState from '@/hooks/use-su-state';
 import { FixedPointMath } from '@/lib';
 import { computeCollateralRatio, formatMoney, ZERO_BIG_NUMBER } from '@/utils';
@@ -24,7 +24,6 @@ const Indicators: FC = () => {
         p="l"
         display="flex"
         borderRadius="m"
-        gridColumn="1/-1"
         border="1px solid"
         flexDirection="column"
         borderColor="lowContainer"
@@ -71,6 +70,26 @@ const Indicators: FC = () => {
               )}
             </Typography>
           </Box>
+        </Box>
+      </Box>
+      <Box
+        p="l"
+        display="flex"
+        borderRadius="m"
+        border="1px solid"
+        borderColor="lowContainer"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
+        <DSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
+        <Box display="flex" flexDirection="column" gap="s">
+          <Typography variant="headline" size="large">
+            {isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(FixedPointMath.toNumber(ZERO_BIG_NUMBER), 2)
+            )}
+          </Typography>
         </Box>
       </Box>
       <Box
