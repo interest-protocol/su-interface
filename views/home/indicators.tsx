@@ -72,15 +72,17 @@ const Indicators: FC = () => {
             />
             <Typography variant="label" size="medium" whiteSpace="nowrap">
               Max.{' '}
-              {isLoading ? (
-                <Skeleton width="3rem" height="0.7rem" />
-              ) : (
+              {data ? (
                 formatMoney(
                   FixedPointMath.toNumber(
                     data ? data.baseBalanceCap : ZERO_BIG_NUMBER
                   ),
                   2
                 )
+              ) : isLoading ? (
+                <Skeleton width="3rem" height="0.7rem" />
+              ) : (
+                formatMoney(0)
               )}
             </Typography>
           </Box>
@@ -98,13 +100,15 @@ const Indicators: FC = () => {
         <DSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {isLoading ? (
-              <Skeleton width="5rem" />
-            ) : (
+            {data ? (
               formatMoney(
                 FixedPointMath.toNumber(data ? data.dSupply : ZERO_BIG_NUMBER),
                 2
               )
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(0)
             )}
           </Typography>
         </Box>
