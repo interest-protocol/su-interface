@@ -36,11 +36,20 @@ const FormButton: FC = () => {
 
   const isMint = form.formType === FormTypeEnum.Mint;
 
-  const disabled = !(
+  const hasDerivatives =
     (form.fSui?.active && Number(form.fSui?.value)) ||
     (form.xSui?.active && Number(form.xSui?.value)) ||
-    (form.dSui?.active && Number(form.dSui?.value))
-  );
+    (form.dSui?.active && Number(form.dSui?.value));
+
+  const hasISui = !!Number(form.iSui?.value);
+
+  const quoting = isMint
+    ? hasISui && !hasDerivatives
+    : hasDerivatives && !hasISui;
+
+  const disabled =
+    quoting ||
+    (isMint ? !hasISui || !hasDerivatives : !hasDerivatives || !hasISui);
 
   const mint = async () => {
     try {
@@ -211,13 +220,15 @@ const FormButton: FC = () => {
         disabled={disabled || loading}
         onClick={isMint ? onMint : onRedeem}
       >
-        {isMint
-          ? loading
-            ? 'Minting'
-            : 'Mint'
-          : loading
-            ? 'Redeeming'
-            : 'Redeem'}
+        {quoting
+          ? 'Quoting...'
+          : isMint
+            ? loading
+              ? 'Minting...'
+              : 'Mint'
+            : loading
+              ? 'Redeeming...'
+              : 'Redeem'}
       </Button>
     </Box>
   );

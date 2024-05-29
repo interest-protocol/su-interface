@@ -44,41 +44,45 @@ const Indicators: FC = () => {
         <ISuiSVG rounded height="100%" maxWidth="2.5rem" maxHeight="3rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {isLoading ? (
-              <Skeleton width="7.5rem" />
-            ) : (
+            {data ? (
               formatMoney(
                 data
                   ? FixedPointMath.toNumber(data.baseBalance ?? ZERO_BIG_NUMBER)
                   : 0,
                 2
               )
+            ) : isLoading ? (
+              <Skeleton width="7.5rem" />
+            ) : (
+              formatMoney(0)
             )}
           </Typography>
           <Box display="flex" alignItems="center" gap="4xl">
             <ProgressIndicator
               variant="bar"
               value={
-                isLoading
-                  ? 0
-                  : FixedPointMath.toNumber(
+                data
+                  ? FixedPointMath.toNumber(
                       data
                         ? data.baseBalance.div(data.baseBalanceCap).times(100)
                         : ZERO_BIG_NUMBER
                     )
+                  : 0
               }
             />
             <Typography variant="label" size="medium" whiteSpace="nowrap">
               Max.{' '}
-              {isLoading ? (
-                <Skeleton width="3rem" height="0.7rem" />
-              ) : (
+              {data ? (
                 formatMoney(
                   FixedPointMath.toNumber(
                     data ? data.baseBalanceCap : ZERO_BIG_NUMBER
                   ),
                   2
                 )
+              ) : isLoading ? (
+                <Skeleton width="3rem" height="0.7rem" />
+              ) : (
+                formatMoney(0)
               )}
             </Typography>
           </Box>
@@ -96,13 +100,15 @@ const Indicators: FC = () => {
         <DSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {isLoading ? (
-              <Skeleton width="5rem" />
-            ) : (
+            {data ? (
               formatMoney(
                 FixedPointMath.toNumber(data ? data.dSupply : ZERO_BIG_NUMBER),
                 2
               )
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(0)
             )}
           </Typography>
         </Box>
@@ -119,13 +125,15 @@ const Indicators: FC = () => {
         <FSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Box display="flex" flexDirection="column" gap="s">
           <Typography variant="headline" size="large">
-            {isLoading ? (
-              <Skeleton width="5rem" />
-            ) : (
+            {data ? (
               formatMoney(
                 FixedPointMath.toNumber(data ? data.fSupply : ZERO_BIG_NUMBER),
                 2
               )
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(0)
             )}
           </Typography>
         </Box>
@@ -141,13 +149,15 @@ const Indicators: FC = () => {
       >
         <XSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
         <Typography variant="headline" size="large">
-          {isLoading ? (
-            <Skeleton width="5rem" />
-          ) : (
+          {data ? (
             formatMoney(
               FixedPointMath.toNumber(data ? data.xSupply : ZERO_BIG_NUMBER),
               2
             )
+          ) : isLoading ? (
+            <Skeleton width="5rem" />
+          ) : (
+            formatMoney(0)
           )}
         </Typography>
       </Box>
@@ -182,10 +192,12 @@ const Indicators: FC = () => {
             Collateral Ratio
           </Typography>
           <Typography variant="headline" size="large">
-            {isLoading ? (
+            {data ? (
+              `${data ? computeCollateralRatio(data).toFixed(2) : 0}%`
+            ) : isLoading ? (
               <Skeleton width="7.5rem" />
             ) : (
-              `${data ? computeCollateralRatio(data).toFixed(2) : 0}%`
+              '0%'
             )}
           </Typography>
         </Box>

@@ -113,45 +113,45 @@ const FormSummary: FC = () => {
         <Typography size="large" variant="body" color="outline">
           Mint Fee:
         </Typography>
-        {isLoading || !data ? (
-          <Skeleton width="4rem" height="2.5rem" />
-        ) : (
-          <Box bg="lowContainer" borderRadius="xs" px="m" py="s">
-            {FixedPointMath.toNumber(data.feePercent)}%
-          </Box>
-        )}
+        <Box bg="lowContainer" borderRadius="xs" px="m" py="s">
+          {isLoading || !data ? (
+            <Skeleton width="4rem" height="1rem" />
+          ) : (
+            <>{FixedPointMath.toNumber(data.feePercent)}%</>
+          )}
+        </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography size="large" variant="body" color="outline">
           Received:
         </Typography>
-        {isLoading || !data ? (
-          <Skeleton width="10rem" height="2.5rem" />
-        ) : (
-          <Box
-            px="m"
-            py="s"
-            gap="s"
-            display="flex"
-            bg="lowContainer"
-            borderRadius="xs"
-            alignItems="center"
-          >
+        <Box
+          px="m"
+          py="s"
+          gap="s"
+          display="flex"
+          bg="lowContainer"
+          borderRadius="xs"
+          alignItems="center"
+        >
+          {isLoading || !data ? (
+            <Skeleton width="10rem" height="1rem" />
+          ) : (
             <Typography size="large" variant="body" whiteSpace="nowrap">
               {formatMoney(FixedPointMath.toNumber(data.valueOut))}{' '}
               {targetSymbol} (
               {formatDollars(FixedPointMath.toNumber(data.valueOut) * usdPrice)}
               )
             </Typography>
-            <Icon
-              rounded
-              width="100%"
-              height="100%"
-              maxWidth="2rem"
-              maxHeight="1.5rem"
-            />
-          </Box>
-        )}
+          )}
+          <Icon
+            rounded
+            width="100%"
+            height="100%"
+            maxWidth="2rem"
+            maxHeight="1.5rem"
+          />
+        </Box>
       </Box>
     </Box>
   );
