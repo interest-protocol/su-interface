@@ -19,14 +19,17 @@ const FormHeader: FC = () => {
     const iSuiPriceTmp = getValues('iSui.usdPrice');
     const xSuiPriceTmp = getValues('xSui.usdPrice');
     const fSuiPriceTmp = getValues('fSui.usdPrice');
+    const dSuiPriceTmp = getValues('dSui.usdPrice');
 
     setValue('formType', tabIndex);
     resetField('fSui');
     resetField('xSui');
     resetField('iSui');
+    resetField('dSui');
     setValue('iSui.usdPrice', iSuiPriceTmp);
     setValue('xSui.usdPrice', xSuiPriceTmp);
     setValue('fSui.usdPrice', fSuiPriceTmp);
+    setValue('dSui.usdPrice', dSuiPriceTmp);
   };
 
   return (

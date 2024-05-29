@@ -1,6 +1,6 @@
 import { SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { devInspectAndGetReturnValues } from '@polymedia/suits';
+import { devInspectAndGetReturnValues } from '@polymedia/suitcase-core';
 import BigNumber from 'bignumber.js';
 
 import { OBJECT_IDS } from '@/constants';

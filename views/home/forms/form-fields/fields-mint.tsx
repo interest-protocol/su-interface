@@ -4,10 +4,10 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import { DSuiSVG, FSuiSVG, XSuiSVG } from '@/components/svg';
 import { TokenField } from '@/components/token-field';
-import { DSUI_TYPE, FSUI_TYPE, XSUI_TYPE } from '@/constants';
-import { useWeb3 } from '@/hooks/use-web3';
+import { FSUI_TYPE, SUI_DOLLAR_TYPE, XSUI_TYPE } from '@/constants';
 import { useIsRebalanceMode } from '@/hooks/use-is-rebalance-mode';
 import { useQuoteCall } from '@/hooks/use-quote-call';
+import { useWeb3 } from '@/hooks/use-web3';
 import { FixedPointMath } from '@/lib';
 import { ZERO_BIG_NUMBER } from '@/utils';
 
@@ -94,7 +94,7 @@ const FieldsMint: FC = () => {
         Bottom={<FormInputDollar label="dSui" />}
         activeBg="linear-gradient(222.71deg, rgba(241, 243, 247, 0) 5.65%, rgba(87, 143, 255, 0.8) 99.55%), linear-gradient(0deg, #F1F3F7, #F1F3F7)"
         balance={`${FixedPointMath.toNumber(
-          coinsMap[DSUI_TYPE]?.balance ?? ZERO_BIG_NUMBER
+          coinsMap[SUI_DOLLAR_TYPE]?.balance ?? ZERO_BIG_NUMBER
         )}`}
         {...register('dSui.value', {
           onChange: () => {

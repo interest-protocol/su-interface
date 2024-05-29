@@ -5,17 +5,28 @@ export const getQuoteCallArgs: GetFeeValueAndFunction = ({
   iSui,
   xSui,
   fSui,
+  dSui,
 }) => {
   const isXCoin = xSui.active;
+  const isFCoin = fSui.active;
+
   if (formType === FormTypeEnum.Mint) {
     return {
-      functionName: isXCoin ? 'mint_x_coin' : 'mint_f_coin',
+      functionName: isXCoin
+        ? 'mint_x_coin'
+        : isFCoin
+          ? 'mint_f_coin'
+          : 'mint_d_coin',
       value: iSui.value,
     };
   }
 
   return {
-    functionName: isXCoin ? 'redeem_x_coin' : 'redeem_f_coin',
-    value: isXCoin ? xSui.value : fSui.value,
+    functionName: isXCoin
+      ? 'redeem_x_coin'
+      : isFCoin
+        ? 'redeem_f_coin'
+        : 'redeem_d_coin',
+    value: isXCoin ? xSui.value : isFCoin ? fSui.value : dSui.value,
   };
 };

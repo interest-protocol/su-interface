@@ -10,6 +10,7 @@ interface GetFeeValueAndFunctionArgs {
   iSui: Field;
   xSui: SuField;
   fSui: SuField;
+  dSui: SuField;
 }
 
 interface GetFeeValueAndFunctionReturn {

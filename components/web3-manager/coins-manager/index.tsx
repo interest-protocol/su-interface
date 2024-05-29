@@ -6,13 +6,13 @@ import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 import useSWR from 'swr';
 
-import { DSUI_TYPE, FSUI_TYPE, ISUI_TYPE, XSUI_TYPE } from '@/constants';
+import { FSUI_TYPE, ISUI_TYPE, SUI_DOLLAR_TYPE, XSUI_TYPE } from '@/constants';
 import { useCoins } from '@/hooks/use-coins';
 import { isSui, ZERO_BIG_NUMBER } from '@/utils';
 
 import { CoinsMap, TGetCoins } from './coins-manager.types';
 
-const COINS_TYPE = [ISUI_TYPE, XSUI_TYPE, FSUI_TYPE, DSUI_TYPE];
+const COINS_TYPE = [ISUI_TYPE, XSUI_TYPE, FSUI_TYPE, SUI_DOLLAR_TYPE];
 
 const getCoins: TGetCoins = async (
   provider,
