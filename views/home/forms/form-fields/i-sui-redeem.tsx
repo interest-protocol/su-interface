@@ -37,7 +37,7 @@ const ISuiRedeem: FC = () => {
   return (
     <TokenField
       active
-      opacity={0.7}
+      opacity="0.7"
       placeholder="--"
       tokenName="iSui"
       variant="outline"

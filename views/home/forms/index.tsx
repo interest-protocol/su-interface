@@ -26,7 +26,7 @@ const Forms: FC = () => {
       },
       xSui: {
         usdPrice: 0,
-        active: false,
+        active: true,
       },
       dSui: {
         usdPrice: 1,

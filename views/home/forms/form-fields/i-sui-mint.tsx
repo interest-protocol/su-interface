@@ -30,11 +30,12 @@ const ISuiMint: FC = () => {
   return (
     <TokenField
       active
+      opacity="1"
       placeholder="--"
       tokenName="iSui"
       variant="outline"
       textAlign="right"
-      opacity={!formType ? 1 : 0.7}
+      handleMax={handleMax}
       Bottom={<FormInputDollar label="iSui" />}
       cursor={!formType ? 'initial' : 'not-allowed'}
       caretColor={!formType ? 'currentColor' : 'transparent'}
@@ -46,7 +47,6 @@ const ISuiMint: FC = () => {
           setValue('iSui.value', parseInputEventToNumberString(v));
         },
       })}
-      {...(!formType && { handleMax })}
       TokenIcon={
         <ISuiSVG
           width="100%"

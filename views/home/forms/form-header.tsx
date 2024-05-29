@@ -30,6 +30,8 @@ const FormHeader: FC = () => {
     setValue('xSui.usdPrice', xSuiPriceTmp);
     setValue('fSui.usdPrice', fSuiPriceTmp);
     setValue('dSui.usdPrice', dSuiPriceTmp);
+
+    setValue(`${tabIndex ? 'x' : 'd'}Sui.active`, true);
   };
 
   return (

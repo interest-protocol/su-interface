@@ -13,6 +13,12 @@ import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
 import { SuForm } from '../forms.types';
 import FormInputDollar from './form-input-dollar';
 
+const TYPE = {
+  x: XSUI_TYPE,
+  f: FSUI_TYPE,
+  d: SUI_DOLLAR_TYPE,
+};
+
 const FieldsRedeem: FC = () => {
   const { coinsMap } = useWeb3();
   const [warningCondition] = useIsRebalanceMode();
@@ -21,6 +27,15 @@ const FieldsRedeem: FC = () => {
   const fSuiActive = useWatch({ control, name: 'fSui.active' });
   const xSuiActive = useWatch({ control, name: 'xSui.active' });
   const dSuiActive = useWatch({ control, name: 'dSui.active' });
+
+  const handleMax = (initial: 'x' | 'd' | 'f') => () => {
+    setValue(
+      `${initial}Sui.value`,
+      `${FixedPointMath.toNumber(
+        coinsMap[TYPE[initial]]?.balance ?? ZERO_BIG_NUMBER
+      )}`
+    );
+  };
 
   return (
     <Box display="flex" gap="s" flexDirection="column">
@@ -31,6 +46,7 @@ const FieldsRedeem: FC = () => {
         variant="outline"
         textAlign="right"
         active={fSuiActive}
+        handleMax={handleMax('f')}
         Bottom={<FormInputDollar label="fSui" />}
         activeBg="linear-gradient(46.55deg, rgba(244, 255, 115, 0.8) 4.39%, #01FDFF 96.96%)"
         balance={`${FixedPointMath.toNumber(
@@ -72,6 +88,7 @@ const FieldsRedeem: FC = () => {
         placeholder="--"
         variant="outline"
         textAlign="right"
+        handleMax={handleMax('d')}
         disabled={warningCondition}
         Bottom={<FormInputDollar label="dSui" />}
         active={warningCondition ? false : dSuiActive}
@@ -115,6 +132,7 @@ const FieldsRedeem: FC = () => {
         placeholder="--"
         variant="outline"
         textAlign="right"
+        handleMax={handleMax('x')}
         disabled={warningCondition}
         Bottom={<FormInputDollar label="xSui" />}
         active={warningCondition ? false : xSuiActive}
