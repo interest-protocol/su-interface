@@ -11,8 +11,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
-import { useWeb3 } from '@/context/web3';
-import { Type } from '@/context/web3/web3.types';
+import { useWeb3 } from '@/hooks/use-web3';
 import { FixedPointMath } from '@/lib';
 import {
   getCoinOfValue,
@@ -20,6 +19,7 @@ import {
   throwTXIfNotSuccessful,
 } from '@/utils';
 import { requestPriceOracle } from '@/utils/oracle';
+import { Type } from '@/utils/types';
 
 import { FormTypeEnum, SuForm } from './forms.types';
 

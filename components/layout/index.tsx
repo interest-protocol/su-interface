@@ -6,7 +6,6 @@ import Header from './header';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => (
   <Box
-    bg="black"
     display="flex"
     color="onSurface"
     minHeight="100vh"

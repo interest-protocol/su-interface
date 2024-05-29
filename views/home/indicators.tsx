@@ -16,9 +16,21 @@ const Indicators: FC = () => {
       as="aside"
       width="100%"
       display="grid"
-      gridTemplateColumns="1fr 1fr"
-      gridTemplateRows="12.5rem 12.5rem 12.5rem"
-      gridColumn={['1/-1', '1/-1', '1/-1', '1/5']}
+      gridColumn={['1/-1', '1/-1', '1/-1', '1/-1', '1/5']}
+      gridTemplateColumns={[
+        '1fr',
+        '1fr 1fr',
+        '1fr 1fr 1fr',
+        '1fr 1fr 1fr 1fr',
+        '1fr 1fr',
+      ]}
+      gridTemplateRows={[
+        '12.5rem 12.5rem 12.5rem 12.5rem 12.5rem',
+        '12.5rem 12.5rem 12.5rem',
+        '12.5rem 12.5rem',
+        '12.5rem 12.5rem',
+        '12.5rem 12.5rem 12.5rem',
+      ]}
     >
       <Box
         p="l"
@@ -77,8 +89,8 @@ const Indicators: FC = () => {
         display="flex"
         borderRadius="m"
         border="1px solid"
-        borderColor="lowContainer"
         flexDirection="column"
+        borderColor="lowContainer"
         justifyContent="space-between"
       >
         <DSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
@@ -94,11 +106,11 @@ const Indicators: FC = () => {
       </Box>
       <Box
         p="l"
+        display="flex"
         borderRadius="m"
         border="1px solid"
-        borderColor="lowContainer"
-        display="flex"
         flexDirection="column"
+        borderColor="lowContainer"
         justifyContent="space-between"
       >
         <FSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />

@@ -1,4 +1,4 @@
-import { Type } from '@/context/web3/web3.types';
+import { Type } from '@/utils/types';
 
 export const OBJECT_IDS = {
   SU: '0xdb466ec68471df830c313ea1d22de7572e12f0565a27a01d0baf2a7b9cd11300',

@@ -1,10 +1,9 @@
 import { CoinStruct } from '@mysten/sui.js/client';
 import { TransactionResult } from '@mysten/sui.js/transactions';
-import { SUI_TYPE_ARG } from '@mysten/sui.js/utils';
+import { normalizeStructTag, SUI_TYPE_ARG } from '@mysten/sui.js/utils';
 
-import { Type } from '@/context/web3/web3.types';
+import { GetCoinOfValueArgs, GetCoinsArgs, Type } from './types';
 
-import { GetCoinOfValueArgs, GetCoinsArgs } from './types';
 export const normalizeSuiType = (x: string) => {
   if (x === SUI_TYPE_ARG) return x;
   const splitType = x.split('::');
@@ -74,3 +73,8 @@ export function getCoinOfValue({
   }
   return coinOfValue;
 }
+
+export const isSameStructTag = (addressA: string, addressB: string) =>
+  normalizeStructTag(addressA) === normalizeStructTag(addressB);
+
+export const isSui = (type: string) => isSameStructTag(type, SUI_TYPE_ARG);

@@ -9,7 +9,7 @@ import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
-import { useWeb3 } from '@/context/web3';
+import { useWeb3 } from '@/hooks/use-web3';
 import { FixedPointMath } from '@/lib';
 import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
 

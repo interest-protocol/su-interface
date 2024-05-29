@@ -4,7 +4,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { ISuiSVG } from '@/components/svg';
 import { TokenField } from '@/components/token-field';
 import { ISUI_TYPE } from '@/constants';
-import { useWeb3 } from '@/context/web3';
+import { useWeb3 } from '@/hooks/use-web3';
 import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
 

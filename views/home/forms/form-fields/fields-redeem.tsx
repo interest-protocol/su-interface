@@ -5,7 +5,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { DSuiSVG, FSuiSVG, XSuiSVG } from '@/components/svg';
 import { TokenField } from '@/components/token-field';
 import { DSUI_TYPE, FSUI_TYPE, XSUI_TYPE } from '@/constants';
-import { useWeb3 } from '@/context/web3';
+import { useWeb3 } from '@/hooks/use-web3';
 import { useIsRebalanceMode } from '@/hooks/use-is-rebalance-mode';
 import { FixedPointMath } from '@/lib';
 import { parseInputEventToNumberString, ZERO_BIG_NUMBER } from '@/utils';
