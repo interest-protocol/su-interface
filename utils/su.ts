@@ -11,9 +11,13 @@ export const computeCollateralRatio = (treasuryState: SuState): number => {
     .multipliedBy(treasuryState.fSupply)
     .div(NINE_DECIMALS_FACTOR);
 
+  const dValue = treasuryState.dNav
+    .multipliedBy(treasuryState.dSupply)
+    .div(NINE_DECIMALS_FACTOR);
+
   return fValue.isZero()
     ? 0
     : FixedPointMath.toNumber(
-        xValue.multipliedBy(NINE_DECIMALS_FACTOR).div(fValue)
+        xValue.multipliedBy(NINE_DECIMALS_FACTOR).div(fValue.plus(dValue))
       ) * 100;
 };
