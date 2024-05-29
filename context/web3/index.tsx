@@ -1,11 +1,12 @@
 import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
 import { CoinMetadata } from '@mysten/sui.js/client';
+import { normalizeStructTag } from '@mysten/sui.js/utils';
 import BigNumber from 'bignumber.js';
 import { createContext, FC, PropsWithChildren, useContext } from 'react';
 import useSWR from 'swr';
 
-import { FSUI_TYPE, ISUI_TYPE, XSUI_TYPE } from '@/constants';
-import { normalizeSuiType, ZERO_BIG_NUMBER } from '@/utils';
+import { FSUI_TYPE, ISUI_TYPE, SUI_DOLLAR_TYPE, XSUI_TYPE } from '@/constants';
+import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { CoinsMap, Web3Context } from './web3.types';
 
@@ -21,7 +22,7 @@ export const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
     async () => {
       if (!currentAccount?.address) return {};
 
-      const [iSuiRaw, xSuiRaw, fSuiRaw] = await Promise.all([
+      const [iSuiRaw, xSuiRaw, fSuiRaw, suiDRaw] = await Promise.all([
         suiClient
           .getCoins({
             owner: currentAccount?.address,
@@ -43,9 +44,16 @@ export const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
             limit: 50,
           })
           .then(({ data }) => data),
+        suiClient
+          .getCoins({
+            owner: currentAccount?.address,
+            coinType: SUI_DOLLAR_TYPE,
+            limit: 50,
+          })
+          .then(({ data }) => data),
       ]);
 
-      const coinsRaw = [...iSuiRaw, ...xSuiRaw, ...fSuiRaw];
+      const coinsRaw = [...iSuiRaw, ...xSuiRaw, ...fSuiRaw, ...suiDRaw];
 
       const coinsMetadata = await Promise.all(
         coinsRaw.map((coin) =>
@@ -64,7 +72,7 @@ export const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
         }, {});
 
       return coinsRaw.reduce((acc, { coinType, ...coinRaw }) => {
-        const type = normalizeSuiType(coinType) as `0x${string}`;
+        const type = normalizeStructTag(coinType) as `0x${string}`;
         const { symbol, decimals, ...metadata } = coinsMetadataMap[coinType];
 
         return {

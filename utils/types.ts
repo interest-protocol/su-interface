@@ -1,7 +1,9 @@
 import { SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 
-import { CoinsMap, Type } from '@/context/web3/web3.types';
+import { CoinsMap } from '@/components/web3-manager/coins-manager/coins-manager.types';
+
+export type Type = `0x${string}`;
 
 export interface GetCoinsArgs {
   suiClient: SuiClient;

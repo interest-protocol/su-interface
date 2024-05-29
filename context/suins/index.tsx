@@ -19,7 +19,7 @@ export const testnetClient = new SuiClient({
   url: process.env.NEXT_PUBLIC_SUI_TESTNET_RPC_URL || getFullnodeUrl('testnet'),
 });
 
-const testnetSuiNs = new SuinsClient(testnetClient, {
+const testnetSuiNs = new SuinsClient(testnetClient as never, {
   networkType: 'testnet',
   contractObjects: {
     packageId:
@@ -31,21 +31,6 @@ const testnetSuiNs = new SuinsClient(testnetClient, {
     suins: '0x4acaf19db12fafce1943bbd44c7f794e1d81d00aeb63617096e5caa39499ba88',
   },
 });
-
-// export const mainnetClient = new SuiClient({
-//   url: process.env.NEXT_PUBLIC_SUI_MAINNET_RPC_URL || getFullnodeUrl('mainnet'),
-// });
-// export const suiNSMainNetProvider = new SuinsClient(mainnetClient as any, {
-//   contractObjects: {
-//     packageId:
-//       '0xd22b24490e0bae52676651b4f56660a5ff8022a2576e0089f79b3c88d44e08f0',
-//     suins: '0x6e0ddefc0ad98889c04bab9639e512c21766c5e6366f89e696956d9be6952871',
-//     registry:
-//       '0xe64cd9db9f829c6cc405d9790bd71567ae07259855f4fba6f02c84f52298c106',
-//     reverseRegistry:
-//       '0x2fd099e17a292d2bc541df474f9fafa595653848cbabb2d7a4656ec786a1969f',
-//   },
-// });
 
 const suiNsContext = createContext<ISuiNsContext>({} as ISuiNsContext);
 

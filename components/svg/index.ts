@@ -4,6 +4,7 @@ export { default as CheckmarkSVG } from './checkmark';
 export { default as ChevronRightSVG } from './chevron-right';
 export { default as CircleSVG } from './circle';
 export { default as CopySVG } from './copy';
+export { default as DSuiSVG } from './d-sui';
 export { default as DiscordSVG } from './discord';
 export { default as FSuiSVG } from './f-sui';
 export { default as GithubSVG } from './github';

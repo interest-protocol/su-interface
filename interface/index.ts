@@ -25,8 +25,10 @@ export interface SuState {
   lastFNav: BigNumber;
   rebalanceBalance: BigNumber;
   reserveBalance: BigNumber;
+  dSupply: BigNumber;
   fSupply: BigNumber;
   xSupply: BigNumber;
+  dNav: BigNumber;
   xNav: BigNumber;
   fNav: BigNumber;
   stabilityCollateralRatio: BigNumber;
@@ -34,7 +36,9 @@ export interface SuState {
 }
 
 export type QuoteFunctionName =
+  | 'mint_d_coin'
   | 'mint_f_coin'
   | 'mint_x_coin'
+  | 'redeem_d_coin'
   | 'redeem_f_coin'
   | 'redeem_x_coin';

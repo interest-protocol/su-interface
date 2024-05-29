@@ -3,7 +3,7 @@ import { FC, useEffect } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import Skeleton from 'react-loading-skeleton';
 
-import { FSuiSVG, ISuiSVG, XSuiSVG } from '@/components/svg';
+import { DSuiSVG, FSuiSVG, ISuiSVG, XSuiSVG } from '@/components/svg';
 import { useQuoteCall } from '@/hooks/use-quote-call';
 import { FixedPointMath } from '@/lib';
 import { formatDollars, formatMoney, ZERO_BIG_NUMBER } from '@/utils';
@@ -15,6 +15,7 @@ const ICONS = {
   iSui: ISuiSVG,
   xSui: XSuiSVG,
   fSui: FSuiSVG,
+  SuiD: DSuiSVG,
 };
 
 const FormSummary: FC = () => {
@@ -23,6 +24,7 @@ const FormSummary: FC = () => {
   const xSui = useWatch({ control, name: 'xSui' });
   const fSui = useWatch({ control, name: 'fSui' });
   const iSui = useWatch({ control, name: 'iSui' });
+  const dSui = useWatch({ control, name: 'dSui' });
 
   const { data, isLoading } = useQuoteCall(
     getQuoteCallArgs({
@@ -30,6 +32,7 @@ const FormSummary: FC = () => {
       fSui,
       xSui,
       iSui,
+      dSui,
     })
   );
 
@@ -56,6 +59,13 @@ const FormSummary: FC = () => {
       );
       return;
     }
+    if (dSui.active) {
+      setValue(
+        'dSui.value',
+        `${FixedPointMath.toNumber(data?.valueOut ?? ZERO_BIG_NUMBER)}`
+      );
+      return;
+    }
   }, [data]);
 
   const targetSymbol =
@@ -65,7 +75,9 @@ const FormSummary: FC = () => {
         ? 'xSui'
         : fSui.active
           ? 'fSui'
-          : null;
+          : dSui.active
+            ? 'SuiD'
+            : null;
 
   const activeAsset =
     formType === FormTypeEnum.Redeem
@@ -74,7 +86,9 @@ const FormSummary: FC = () => {
         ? xSui
         : fSui.active
           ? fSui
-          : null;
+          : dSui.active
+            ? dSui
+            : null;
 
   const usdPrice = activeAsset ? activeAsset.usdPrice : 0;
 
@@ -99,45 +113,45 @@ const FormSummary: FC = () => {
         <Typography size="large" variant="body" color="outline">
           Mint Fee:
         </Typography>
-        {isLoading || !data ? (
-          <Skeleton width="4rem" height="2.5rem" />
-        ) : (
-          <Box bg="lowContainer" borderRadius="xs" px="m" py="s">
-            {FixedPointMath.toNumber(data.feePercent)}%
-          </Box>
-        )}
+        <Box bg="lowContainer" borderRadius="xs" px="m" py="s">
+          {isLoading || !data ? (
+            <Skeleton width="4rem" height="1rem" />
+          ) : (
+            <>{FixedPointMath.toNumber(data.feePercent)}%</>
+          )}
+        </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography size="large" variant="body" color="outline">
           Received:
         </Typography>
-        {isLoading || !data ? (
-          <Skeleton width="10rem" height="2.5rem" />
-        ) : (
-          <Box
-            px="m"
-            py="s"
-            gap="s"
-            display="flex"
-            bg="lowContainer"
-            borderRadius="xs"
-            alignItems="center"
-          >
+        <Box
+          px="m"
+          py="s"
+          gap="s"
+          display="flex"
+          bg="lowContainer"
+          borderRadius="xs"
+          alignItems="center"
+        >
+          {isLoading || !data ? (
+            <Skeleton width="10rem" height="1rem" />
+          ) : (
             <Typography size="large" variant="body" whiteSpace="nowrap">
               {formatMoney(FixedPointMath.toNumber(data.valueOut))}{' '}
               {targetSymbol} (
               {formatDollars(FixedPointMath.toNumber(data.valueOut) * usdPrice)}
               )
             </Typography>
-            <Icon
-              rounded
-              width="100%"
-              height="100%"
-              maxWidth="2rem"
-              maxHeight="1.5rem"
-            />
-          </Box>
-        )}
+          )}
+          <Icon
+            rounded
+            width="100%"
+            height="100%"
+            maxWidth="2rem"
+            maxHeight="1.5rem"
+          />
+        </Box>
       </Box>
     </Box>
   );

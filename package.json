@@ -12,10 +12,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@interest-protocol/ui-kit": "0.2.25-alpha",
-    "@mysten/dapp-kit": "^0.12.5",
-    "@mysten/sui.js": "^0.51.0",
+    "@mysten/dapp-kit": "^0.13.2",
+    "@mysten/sui.js": "^0.54.1",
     "@mysten/suins-toolkit": "^0.4.4",
-    "@polymedia/suits": "^0.0.37",
+    "@polymedia/suitcase-core": "^0.0.4",
     "@stylin.js/react": "1.0.5-alpha.0",
     "@tanstack/react-query": "^5.28.4",
     "@uidotdev/usehooks": "^2.4.1",
@@ -32,7 +32,8 @@
     "react-loading-skeleton": "^3.4.0",
     "swr": "^2.2.5",
     "toformat": "^2.0.0",
-    "unikey": "^1.1.0"
+    "unikey": "^1.1.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.11.0",
@@ -61,5 +62,6 @@
   },
   "engines": {
     "node": ">=18.17"
-  }
+  },
+  "packageManager": "pnpm@9.0.4+sha512.c374b52de3de88c58fd8333df664a737279cdb0e1344ba4054d3b1fffa9a1a3670854f755dca4f16adea3f14be9896a7fcaf167409fe0c1ad60475271dafe81a"
 }
