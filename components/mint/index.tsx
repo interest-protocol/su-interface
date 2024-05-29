@@ -68,8 +68,8 @@ const Mint: FC = () => {
   return (
     <Button
       p="xs"
-      onClick={onMint}
       variant="tonal"
+      onClick={onMint}
       color="onSurface"
       borderRadius="full"
       disabled={isLoading}

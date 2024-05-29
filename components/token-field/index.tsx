@@ -157,19 +157,6 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
             />
             {Bottom}
           </Box>
-          {handleMax && (
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <Button
-                px="m"
-                variant="text"
-                color="primary"
-                onClick={handleMax}
-                disabled={disabled}
-              >
-                MAX
-              </Button>
-            </Box>
-          )}
           {onActivate && (
             <Box
               mx="m"
@@ -192,15 +179,34 @@ export const TokenField: FC<PropsWithRef<TokenFieldProps>> = forwardRef(
           )}
         </Box>
         {active && balance && (
-          <Typography
-            pt="2xs"
-            size="large"
-            variant="label"
-            fontSize="0.75rem"
-            color={disabled ? 'onSurface' : statusColor}
+          <Box
+            my="xs"
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            Balance: {balance}
-          </Typography>
+            <Typography
+              pt="2xs"
+              size="large"
+              variant="label"
+              fontSize="0.75rem"
+              color={disabled ? 'onSurface' : statusColor}
+            >
+              Balance: {balance}
+            </Typography>
+            {handleMax && (
+              <Button
+                px="xs"
+                py="2xs"
+                fontSize="xs"
+                variant="outline"
+                borderRadius="2xs"
+                onClick={handleMax}
+              >
+                MAX
+              </Button>
+            )}
+          </Box>
         )}
       </Box>
     );

@@ -165,11 +165,11 @@ const Indicators: FC = () => {
         p="l"
         display="flex"
         borderRadius="m"
-        gridColumn="1/-1"
         border="1px solid"
         flexDirection="column"
         borderColor="lowContainer"
         justifyContent="space-between"
+        gridColumn={['1/-1', '1/-1', 'span 2', '1/-1']}
       >
         <Box
           width="3rem"
