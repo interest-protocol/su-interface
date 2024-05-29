@@ -4,7 +4,7 @@ import { TransactionBlock } from '@mysten/sui.js/transactions';
 import {
   devInspectAndGetReturnValues,
   getSuiObjectResponseFields,
-} from '@polymedia/suits';
+} from '@polymedia/suitcase-core';
 import BigNumber from 'bignumber.js';
 import { path, pathOr, propOr } from 'ramda';
 import useSWR from 'swr';
@@ -64,6 +64,13 @@ const parseData = ({
         treasuryCaps[0]
       )
     ),
+    dSupply: BigNumber(
+      pathOr(
+        '0',
+        ['data', 'content', 'fields', 'total_supply', 'fields', 'value'],
+        treasuryCaps[2]
+      )
+    ),
     xSupply: BigNumber(
       pathOr(
         '0',
@@ -73,6 +80,7 @@ const parseData = ({
     ),
     fNav: BigNumber(fNav),
     xNav: BigNumber(xNav),
+    dNav: BigNumber(1_000_000_000),
     rebalanceCollateralRatio: BigNumber(
       propOr('0', 'rebalance_collateral_ratio', vaultState)
     ),
@@ -104,7 +112,11 @@ const useSuState = () => {
       });
 
       const fetchTreasuryCapsPromise = suiClient.multiGetObjects({
-        ids: [OBJECT_IDS.F_SUI_TREASURY_CAP, OBJECT_IDS.X_SUI_TREASURY_CAP],
+        ids: [
+          OBJECT_IDS.F_SUI_TREASURY_CAP,
+          OBJECT_IDS.X_SUI_TREASURY_CAP,
+          OBJECT_IDS.D_SUI_TREASURY_CAP,
+        ],
         options: {
           showContent: true,
         },
@@ -130,8 +142,15 @@ const useSuState = () => {
         ],
       });
 
-      const fNavPromise = devInspectAndGetReturnValues(suiClient, fNavTXB);
-      const xNavPromise = devInspectAndGetReturnValues(suiClient, xNavTXB);
+      const fNavPromise = devInspectAndGetReturnValues(
+        suiClient as never,
+        fNavTXB
+      );
+
+      const xNavPromise = devInspectAndGetReturnValues(
+        suiClient as never,
+        xNavTXB
+      );
 
       const [treasuryState, treasuryCaps, [fNav], [xNav]] = await Promise.all([
         fetchTreasuryStatePromise,

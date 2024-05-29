@@ -30,7 +30,7 @@ const FormButton: FC = () => {
   const { control } = useFormContext<SuForm>();
   const [loading, setLoading] = useState(false);
 
-  const signTransactionBlock = useSignTransactionBlock();
+  const { mutateAsync: signTransaction } = useSignTransactionBlock();
 
   const form = useWatch({ control });
 
@@ -38,7 +38,8 @@ const FormButton: FC = () => {
 
   const disabled = !(
     (form.fSui?.active && Number(form.fSui?.value)) ||
-    (form.xSui?.active && Number(form.xSui?.value))
+    (form.xSui?.active && Number(form.xSui?.value)) ||
+    (form.dSui?.active && Number(form.dSui?.value))
   );
 
   const mint = async () => {
@@ -54,6 +55,7 @@ const FormButton: FC = () => {
       const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
 
       const isFMint = !!form.fSui?.active;
+      const isXMint = !!form.xSui?.active;
 
       const base_in = getCoinOfValue({
         txb,
@@ -66,7 +68,7 @@ const FormButton: FC = () => {
 
       const [coinOut, coinExtra] = txb.moveCall({
         target: `${OBJECT_IDS.SU}::vault::${
-          isFMint ? 'mint_f_coin' : 'mint_x_coin'
+          isFMint ? 'mint_f_coin' : isXMint ? 'mint_x_coin' : 'mint_d_coin'
         }`,
         arguments: [
           txb.object(OBJECT_IDS.VAULT),
@@ -80,14 +82,13 @@ const FormButton: FC = () => {
 
       const returnValues = [coinOut];
 
-      if (!isFMint) returnValues.push(coinExtra);
+      if (isXMint) returnValues.push(coinExtra);
 
       txb.transferObjects(returnValues, wallet.address);
 
-      const { signature, transactionBlockBytes } =
-        await signTransactionBlock.mutateAsync({
-          transactionBlock: txb,
-        });
+      const { signature, transactionBlockBytes } = await signTransaction({
+        transactionBlock: txb,
+      });
 
       const tx = await suiClient.executeTransactionBlock({
         signature,
@@ -109,10 +110,14 @@ const FormButton: FC = () => {
       if (!wallet?.address) throw new Error('Must connect your wallet');
 
       const isFRedeem = !!form.fSui?.active;
+      const isXRedeem = !!form.xSui?.active;
 
       const pred = isFRedeem
         ? !form.fSui || form.fSui.value == '0'
-        : !form.xSui || form.xSui.value == '0';
+        : !form.xSui ||
+          form.xSui.value == '0' ||
+          !form.dSui ||
+          form.dSui.value == '0';
 
       if (pred) throw new Error('Cannot redeem 0 coins');
 
@@ -120,7 +125,11 @@ const FormButton: FC = () => {
 
       const txb = new TransactionBlock();
 
-      const valueIn = isFRedeem ? form.fSui?.value : form.xSui?.value;
+      const valueIn = isFRedeem
+        ? form.fSui?.value
+        : isXRedeem
+          ? form.xSui?.value
+          : form.dSui?.value;
 
       const amount = FixedPointMath.toBigNumber(valueIn || 0);
 
@@ -129,7 +138,11 @@ const FormButton: FC = () => {
         coinsMap,
         coinValue: BigInt(amount.decimalPlaces(0).toString()),
         coinType: `${OBJECT_IDS.SU}::${
-          isFRedeem ? 'f_sui::F_SUI' : 'x_sui::X_SUI'
+          isFRedeem
+            ? 'f_sui::F_SUI'
+            : isXRedeem
+              ? 'x_sui::X_SUI'
+              : 'sui_dollar::SUI_DOLLAR'
         }` as Type,
       });
 
@@ -137,7 +150,11 @@ const FormButton: FC = () => {
 
       const [coinOut] = txb.moveCall({
         target: `${OBJECT_IDS.SU}::vault::${
-          isFRedeem ? 'redeem_f_coin' : 'redeem_x_coin'
+          isFRedeem
+            ? 'redeem_f_coin'
+            : isXRedeem
+              ? 'redeem_x_coin'
+              : 'redeem_d_coin'
         }`,
         arguments: [
           txb.object(OBJECT_IDS.VAULT),
@@ -151,10 +168,9 @@ const FormButton: FC = () => {
 
       txb.transferObjects([coinOut], wallet.address);
 
-      const { signature, transactionBlockBytes } =
-        await signTransactionBlock.mutateAsync({
-          transactionBlock: txb,
-        });
+      const { signature, transactionBlockBytes } = await signTransaction({
+        transactionBlock: txb,
+      });
 
       const tx = await suiClient.executeTransactionBlock({
         signature,

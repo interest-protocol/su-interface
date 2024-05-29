@@ -101,7 +101,10 @@ const Indicators: FC = () => {
             {isLoading ? (
               <Skeleton width="5rem" />
             ) : (
-              formatMoney(FixedPointMath.toNumber(ZERO_BIG_NUMBER), 2)
+              formatMoney(
+                FixedPointMath.toNumber(data ? data.dSupply : ZERO_BIG_NUMBER),
+                2
+              )
             )}
           </Typography>
         </Box>

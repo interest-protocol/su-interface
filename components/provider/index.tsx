@@ -26,7 +26,7 @@ const Provider: FC<PropsWithChildren> = ({ children }) => (
   <ThemeManager>
     <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
       <QueryClientProvider client={queryClient}>
-        <WalletProvider autoConnect>
+        <WalletProvider stashedWallet={{ name: 'Su Protocol' }} autoConnect>
           <SuiNsProvider>
             <Web3Manager />
             {children}
