@@ -89,9 +89,8 @@ const FieldsRedeem: FC = () => {
         variant="outline"
         textAlign="right"
         handleMax={handleMax('d')}
-        disabled={warningCondition}
         Bottom={<FormInputDollar label="dSui" />}
-        active={warningCondition ? false : dSuiActive}
+        active={dSuiActive}
         activeBg="linear-gradient(222.71deg, rgba(241, 243, 247, 0) 5.65%, rgba(87, 143, 255, 0.8) 99.55%), linear-gradient(0deg, #F1F3F7, #F1F3F7)"
         balance={`${FixedPointMath.toNumber(
           coinsMap[SUI_DOLLAR_TYPE]?.balance ?? ZERO_BIG_NUMBER

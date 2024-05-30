@@ -34,9 +34,9 @@ const FormsTip: FC = () => {
             {isMint ? "You can't mint fSui" : "You can't redeem xSui"}
           </Typography>
           <Typography size="large" variant="body">
-            {isMint ? 'Minting fSui' : 'Redeeming xSui'} has been disabled until
-            CR (Collateral Ratio) is above {rebalanceCollateralRatio.toFixed(0)}
-            %
+            {isMint ? 'Minting fSui/SuiD' : 'Redeeming xSui'} has been disabled
+            until CR (Collateral Ratio) is above{' '}
+            {rebalanceCollateralRatio.toFixed(0)}%
           </Typography>
         </Box>
         <Box display="flex" gap="m">
