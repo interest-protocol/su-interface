@@ -62,12 +62,11 @@ const Indicators: FC = () => {
               variant="bar"
               value={
                 data
-                  ? FixedPointMath.toNumber(
-                      data
-                        ? data.baseBalance.div(data.baseBalanceCap).times(100)
-                        : ZERO_BIG_NUMBER
-                    )
-                  : 0
+                  ? data.baseBalance
+                      .div(data.baseBalanceCap)
+                      .times(100)
+                      .toNumber()
+                  : ZERO_BIG_NUMBER.toNumber()
               }
             />
             <Typography variant="label" size="medium" whiteSpace="nowrap">
