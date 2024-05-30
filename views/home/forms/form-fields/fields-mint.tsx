@@ -88,7 +88,8 @@ const FieldsMint: FC = () => {
         placeholder="--"
         variant="outline"
         textAlign="right"
-        active={dSuiActive}
+        active={warningCondition ? false : dSuiActive}
+        disabled={warningCondition}
         cursor="not-allowed"
         caretColor="currentColor"
         Bottom={<FormInputDollar label="dSui" />}
@@ -102,7 +103,7 @@ const FieldsMint: FC = () => {
           },
         })}
         onActivate={() => {
-          if (dSuiActive) return;
+          if (dSuiActive || warningCondition) return;
 
           setValue('dSui.active', true);
           setValue('fSui.active', false);
