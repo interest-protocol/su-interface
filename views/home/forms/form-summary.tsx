@@ -111,7 +111,7 @@ const FormSummary: FC = () => {
       </Box>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography size="large" variant="body" color="outline">
-          Mint Fee:
+          {formType === FormTypeEnum.Redeem ? 'Redeem' : 'Mint'} Fee:
         </Typography>
         <Box bg="lowContainer" borderRadius="xs" px="m" py="s">
           {isLoading || !data ? (
