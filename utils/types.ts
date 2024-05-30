@@ -1,5 +1,6 @@
 import { SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
+import BigNumber from 'bignumber.js';
 
 import { CoinsMap } from '@/components/web3-manager/coins-manager/coins-manager.types';
 
@@ -17,4 +18,11 @@ export interface GetCoinOfValueArgs {
   coinsMap: CoinsMap;
   coinType: Type;
   coinValue: number | bigint | string;
+}
+
+export interface GetSafeValueArgs {
+  coinValue: string;
+  coinType: string;
+  balance: BigNumber;
+  decimals: number;
 }

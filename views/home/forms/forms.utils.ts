@@ -1,4 +1,10 @@
-import { FormTypeEnum, GetFeeValueAndFunction } from './forms.types';
+import { FSUI_TYPE, SUI_DOLLAR_TYPE, XSUI_TYPE } from '@/constants';
+
+import {
+  FormTypeEnum,
+  GetActiveCoinTypeArgs,
+  GetFeeValueAndFunction,
+} from './forms.types';
 
 export const getQuoteCallArgs: GetFeeValueAndFunction = ({
   formType,
@@ -29,4 +35,14 @@ export const getQuoteCallArgs: GetFeeValueAndFunction = ({
         : 'redeem_d_coin',
     value: isXCoin ? xSui.value : isFCoin ? fSui.value : dSui.value,
   };
+};
+
+export const getActiveCoinType = ({ xSui, fSui }: GetActiveCoinTypeArgs) => {
+  const isFRedeem = !!fSui?.active;
+  const isXRedeem = !!xSui?.active;
+
+  if (isFRedeem) return FSUI_TYPE;
+  if (isXRedeem) return XSUI_TYPE;
+
+  return SUI_DOLLAR_TYPE;
 };

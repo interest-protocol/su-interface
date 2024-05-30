@@ -42,3 +42,9 @@ export interface SuForm {
 export interface FormInputDollarProps {
   label: 'iSui' | 'fSui' | 'xSui' | 'dSui';
 }
+
+export interface GetActiveCoinTypeArgs {
+  fSui?: Partial<SuField>;
+  xSui?: Partial<SuField>;
+  dSui?: Partial<SuField>;
+}

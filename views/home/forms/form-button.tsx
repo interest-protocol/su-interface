@@ -10,18 +10,20 @@ import { FC, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import { OBJECT_IDS } from '@/constants';
+import { ISUI_TYPE, OBJECT_IDS } from '@/constants';
 import { useWeb3 } from '@/hooks/use-web3';
-import { FixedPointMath } from '@/lib';
 import {
   getCoinOfValue,
+  getSafeValue,
   showTXSuccessToast,
   throwTXIfNotSuccessful,
+  ZERO_BIG_NUMBER,
 } from '@/utils';
 import { requestPriceOracle } from '@/utils/oracle';
 import { Type } from '@/utils/types';
 
 import { FormTypeEnum, SuForm } from './forms.types';
+import { getActiveCoinType } from './forms.utils';
 
 const FormButton: FC = () => {
   const { mutate, coinsMap } = useWeb3();
@@ -53,7 +55,9 @@ const FormButton: FC = () => {
 
   const mint = async () => {
     try {
+      const iSuiBalance = coinsMap[ISUI_TYPE]?.balance || ZERO_BIG_NUMBER;
       if (!wallet?.address) throw new Error('Must connect your wallet');
+      if (iSuiBalance.isZero()) throw new Error('Please mint some iSui');
       if (!form.iSui || form.iSui.value == '0')
         throw new Error('Cannot mint 0 coins');
 
@@ -61,8 +65,12 @@ const FormButton: FC = () => {
 
       const txb = new TransactionBlock();
 
-      const amount = FixedPointMath.toBigNumber(form.iSui?.value || 0);
-
+      const amount = getSafeValue({
+        coinValue: form.iSui?.value || '0',
+        coinType: ISUI_TYPE,
+        balance: iSuiBalance,
+        decimals: 9,
+      });
       const isFMint = !!form.fSui?.active;
       const isXMint = !!form.xSui?.active;
 
@@ -107,6 +115,7 @@ const FormButton: FC = () => {
       });
 
       throwTXIfNotSuccessful(tx);
+
       showTXSuccessToast(tx);
     } finally {
       setLoading(false);
@@ -130,6 +139,12 @@ const FormButton: FC = () => {
 
       if (pred) throw new Error('Cannot redeem 0 coins');
 
+      const coinType = getActiveCoinType({
+        dSui: form.dSui,
+        xSui: form.xSui,
+        fSui: form.fSui,
+      });
+
       setLoading(true);
 
       const txb = new TransactionBlock();
@@ -140,7 +155,16 @@ const FormButton: FC = () => {
           ? form.xSui?.value
           : form.dSui?.value;
 
-      const amount = FixedPointMath.toBigNumber(valueIn || 0);
+      const balance = coinsMap[coinType]?.balance || ZERO_BIG_NUMBER;
+
+      if (balance.isZero()) throw new Error(`You need to mint ${coinType}`);
+
+      const amount = getSafeValue({
+        coinValue: valueIn || '0',
+        coinType,
+        balance: balance,
+        decimals: 9,
+      });
 
       const coinIn = getCoinOfValue({
         txb,
