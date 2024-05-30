@@ -2,7 +2,14 @@ import { CoinStruct } from '@mysten/sui.js/client';
 import { TransactionResult } from '@mysten/sui.js/transactions';
 import { normalizeStructTag, SUI_TYPE_ARG } from '@mysten/sui.js/utils';
 
-import { GetCoinOfValueArgs, GetCoinsArgs, Type } from './types';
+import { FixedPointMath } from '@/lib';
+
+import {
+  GetCoinOfValueArgs,
+  GetCoinsArgs,
+  GetSafeValueArgs,
+  Type,
+} from './types';
 
 export const normalizeSuiType = (x: string) => {
   if (x === SUI_TYPE_ARG) return x;
@@ -78,3 +85,26 @@ export const isSameStructTag = (addressA: string, addressB: string) =>
   normalizeStructTag(addressA) === normalizeStructTag(addressB);
 
 export const isSui = (type: string) => isSameStructTag(type, SUI_TYPE_ARG);
+
+export const getSafeValue = ({
+  coinValue,
+  coinType,
+  balance,
+  decimals,
+}: GetSafeValueArgs) => {
+  const amount = FixedPointMath.toBigNumber(coinValue, decimals).decimalPlaces(
+    0
+  );
+
+  const safeBalance = isSui(coinType) ? balance.minus(1_000_000_000) : balance;
+
+  if (safeBalance.isNegative() || safeBalance.isZero())
+    throw new Error('Not enough balance');
+
+  const safeAmount = amount.gt(safeBalance) ? safeBalance : amount;
+
+  if (safeAmount.isNegative() || safeAmount.isZero())
+    throw new Error('Not valid amount');
+
+  return safeAmount;
+};
