@@ -29,7 +29,7 @@ const Mint: FC = () => {
 
       const txb = new TransactionBlock();
 
-      const [coin] = txb.moveCall({
+      const coin = txb.moveCall({
         target: `${OBJECT_IDS.SU}::i_sui::mint`,
         arguments: [
           txb.object(OBJECT_IDS.I_SUI_TREASURY),
