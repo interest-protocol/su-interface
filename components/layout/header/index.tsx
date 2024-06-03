@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
+import Checkpoint from '@/components/checkpoint';
 import { LogoSVG } from '@/components/svg';
 
 import Wallet from './wallet';
@@ -36,15 +37,9 @@ const Header: FC = () => (
               Protocol
             </Typography>
           </Typography>
-          <Button
-            p="2xs"
-            fontSize="2xs"
-            variant="filled"
-            borderRadius="s"
-            bg="errorContainer"
-            color="onErrorContainer"
-          >
+          <Button p="2xs" fontSize="2xs" variant="outline" borderRadius="s">
             Testnet
+            <Checkpoint />
           </Button>
         </Box>
       </Box>
