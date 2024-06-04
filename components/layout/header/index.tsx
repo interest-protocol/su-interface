@@ -45,7 +45,7 @@ const Header: FC = () => (
             fontSize="2xs"
             borderRadius="s"
             variant="outline"
-            display={['none', 'none', 'block']}
+            display={['none', 'none', 'flex']}
           >
             Testnet
             <Checkpoint />
