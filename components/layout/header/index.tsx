@@ -2,6 +2,7 @@ import { Box, Button, Typography } from '@interest-protocol/ui-kit';
 import { FC } from 'react';
 
 import Checkpoint from '@/components/checkpoint';
+import Mint from '@/components/mint';
 import { LogoSVG } from '@/components/svg';
 
 import Wallet from './wallet';
@@ -9,10 +10,12 @@ import Wallet from './wallet';
 const Header: FC = () => (
   <Box variant="container" width={['unset', 'unset', '100%']}>
     <Box
+      zIndex="1"
       as="header"
       width="100%"
       display="flex"
       gridColumn="1/-1"
+      position="relative"
       py={['unset', 'unset', 'l']}
       justifyContent="space-between"
     >
@@ -37,7 +40,13 @@ const Header: FC = () => (
               Protocol
             </Typography>
           </Typography>
-          <Button p="2xs" fontSize="2xs" variant="outline" borderRadius="s">
+          <Button
+            p="2xs"
+            fontSize="2xs"
+            borderRadius="s"
+            variant="outline"
+            display={['none', 'none', 'block']}
+          >
             Testnet
             <Checkpoint />
           </Button>
@@ -46,6 +55,19 @@ const Header: FC = () => (
       <Box display="flex">
         <Wallet />
       </Box>
+    </Box>
+    <Box
+      width="100%"
+      gridColumn="1/-1"
+      alignItems="center"
+      justifyContent="space-between"
+      display={['flex', 'flex', 'none']}
+    >
+      <Button p="2xs" fontSize="2xs" borderRadius="s" variant="outline">
+        Testnet
+        <Checkpoint />
+      </Button>
+      <Mint />
     </Box>
   </Box>
 );

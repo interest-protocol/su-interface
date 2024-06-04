@@ -14,7 +14,9 @@ const Wallet: FC = () => {
     <Box gap="m" display="flex" alignItems="center" justifyContent="flex-end">
       {currentAccount ? (
         <>
-          <Mint />
+          <Box display={['none', 'none', 'block']}>
+            <Mint />
+          </Box>
           <Profile />
         </>
       ) : (

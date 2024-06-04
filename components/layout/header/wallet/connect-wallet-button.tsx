@@ -1,6 +1,6 @@
 import '@mysten/dapp-kit/dist/index.css';
 
-import { Button } from '@interest-protocol/ui-kit';
+import { Button, Typography } from '@interest-protocol/ui-kit';
 import { ConnectModal, useCurrentAccount } from '@mysten/dapp-kit';
 import { FC, useState } from 'react';
 
@@ -20,7 +20,15 @@ const ConnectWalletButton: FC = () => {
           disabled={!!currentAccount}
           onClick={() => setOpen((v) => !v)}
         >
-          Connect Wallet
+          Connect{' '}
+          <Typography
+            as="span"
+            size="large"
+            variant="label"
+            display={['none', 'none', 'inline']}
+          >
+            Wallet
+          </Typography>
         </Button>
       }
       open={open}
