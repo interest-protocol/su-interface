@@ -65,6 +65,8 @@ const Mint: FC = () => {
       error: 'Error on mint iSui!',
     });
 
+  if (!wallet) return null;
+
   return (
     <Button
       p="xs"
