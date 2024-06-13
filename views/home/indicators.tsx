@@ -4,11 +4,48 @@ import Skeleton from 'react-loading-skeleton';
 
 import { DSuiSVG, FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
 import useSuState from '@/hooks/use-su-state';
+import useSuiPrice from '@/hooks/use-sui-price';
 import { FixedPointMath } from '@/lib';
-import { computeCollateralRatio, formatMoney, ZERO_BIG_NUMBER } from '@/utils';
+import {
+  computeCollateralRatio,
+  formatDollars,
+  formatMoney,
+  ZERO_BIG_NUMBER,
+} from '@/utils';
 
 const Indicators: FC = () => {
   const { data, isLoading } = useSuState();
+  const { data: suiPrice } = useSuiPrice();
+
+  const iSuiSupply = data ? (data ? data.baseBalance : ZERO_BIG_NUMBER) : null;
+
+  const iSuiUsdPrice = suiPrice;
+
+  const iSuiMarketCap =
+    iSuiSupply && iSuiUsdPrice ? iSuiSupply.times(iSuiUsdPrice) : null;
+
+  const xSuiSupply = data ? (data ? data.xSupply : ZERO_BIG_NUMBER) : null;
+
+  const xSuiUsdPrice =
+    (suiPrice ?? 1) * FixedPointMath.toNumber(data?.xNav ?? ZERO_BIG_NUMBER);
+
+  const xSuiMarketCap =
+    xSuiSupply && xSuiUsdPrice ? xSuiSupply.times(xSuiUsdPrice) : null;
+
+  const fSuiSupply = data ? (data ? data.fSupply : ZERO_BIG_NUMBER) : null;
+
+  const fSuiUsdPrice =
+    (suiPrice ?? 1) * FixedPointMath.toNumber(data?.fNav ?? ZERO_BIG_NUMBER);
+
+  const fSuiMarketCap =
+    fSuiSupply && fSuiUsdPrice ? fSuiSupply.times(fSuiUsdPrice) : null;
+
+  const dSuiSupply = data ? (data ? data.dSupply : ZERO_BIG_NUMBER) : null;
+
+  const dSuiUsdPrice = 1;
+
+  const dSuiMarketCap =
+    dSuiSupply && dSuiUsdPrice ? dSuiSupply.times(dSuiUsdPrice) : null;
 
   return (
     <Box
@@ -43,20 +80,27 @@ const Indicators: FC = () => {
       >
         <ISuiSVG rounded height="100%" maxWidth="2.5rem" maxHeight="3rem" />
         <Box display="flex" flexDirection="column" gap="s">
-          <Typography variant="headline" size="large">
-            {data ? (
-              formatMoney(
-                data
-                  ? FixedPointMath.toNumber(data.baseBalance ?? ZERO_BIG_NUMBER)
-                  : 0,
-                2
-              )
-            ) : isLoading ? (
-              <Skeleton width="7.5rem" />
-            ) : (
-              formatMoney(0)
-            )}
-          </Typography>
+          <Box>
+            <Typography variant="headline" size="medium">
+              {iSuiSupply ? (
+                formatMoney(FixedPointMath.toNumber(iSuiSupply))
+              ) : isLoading ? (
+                <Skeleton width="5rem" />
+              ) : (
+                formatMoney(0)
+              )}
+            </Typography>
+            <Typography variant="label" size="large">
+              MC:{' '}
+              {iSuiMarketCap ? (
+                formatDollars(FixedPointMath.toNumber(iSuiMarketCap))
+              ) : isLoading ? (
+                <Skeleton width="5rem" />
+              ) : (
+                formatDollars(0)
+              )}
+            </Typography>
+          </Box>
           <Box display="flex" alignItems="center" gap="4xl">
             <ProgressIndicator
               variant="bar"
@@ -97,17 +141,24 @@ const Indicators: FC = () => {
         justifyContent="space-between"
       >
         <DSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
-        <Box display="flex" flexDirection="column" gap="s">
-          <Typography variant="headline" size="large">
-            {data ? (
-              formatMoney(
-                FixedPointMath.toNumber(data ? data.dSupply : ZERO_BIG_NUMBER),
-                2
-              )
+        <Box>
+          <Typography variant="headline" size="medium">
+            {dSuiSupply ? (
+              formatMoney(FixedPointMath.toNumber(dSuiSupply))
             ) : isLoading ? (
               <Skeleton width="5rem" />
             ) : (
               formatMoney(0)
+            )}
+          </Typography>
+          <Typography variant="label" size="large">
+            MC:{' '}
+            {dSuiMarketCap ? (
+              formatDollars(FixedPointMath.toNumber(dSuiMarketCap))
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatDollars(0)
             )}
           </Typography>
         </Box>
@@ -122,17 +173,24 @@ const Indicators: FC = () => {
         justifyContent="space-between"
       >
         <FSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
-        <Box display="flex" flexDirection="column" gap="s">
-          <Typography variant="headline" size="large">
-            {data ? (
-              formatMoney(
-                FixedPointMath.toNumber(data ? data.fSupply : ZERO_BIG_NUMBER),
-                2
-              )
+        <Box>
+          <Typography variant="headline" size="medium">
+            {fSuiSupply ? (
+              formatMoney(FixedPointMath.toNumber(fSuiSupply))
             ) : isLoading ? (
               <Skeleton width="5rem" />
             ) : (
               formatMoney(0)
+            )}
+          </Typography>
+          <Typography variant="label" size="large">
+            MC:{' '}
+            {fSuiMarketCap ? (
+              formatDollars(FixedPointMath.toNumber(fSuiMarketCap))
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatDollars(0)
             )}
           </Typography>
         </Box>
@@ -147,18 +205,27 @@ const Indicators: FC = () => {
         justifyContent="space-between"
       >
         <XSuiSVG rounded height="100%" maxWidth="3rem" maxHeight="2.5rem" />
-        <Typography variant="headline" size="large">
-          {data ? (
-            formatMoney(
-              FixedPointMath.toNumber(data ? data.xSupply : ZERO_BIG_NUMBER),
-              2
-            )
-          ) : isLoading ? (
-            <Skeleton width="5rem" />
-          ) : (
-            formatMoney(0)
-          )}
-        </Typography>
+        <Box>
+          <Typography variant="headline" size="medium">
+            {xSuiSupply ? (
+              formatMoney(FixedPointMath.toNumber(xSuiSupply))
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatMoney(0)
+            )}
+          </Typography>
+          <Typography variant="label" size="large">
+            MC:{' '}
+            {xSuiMarketCap ? (
+              formatDollars(FixedPointMath.toNumber(xSuiMarketCap))
+            ) : isLoading ? (
+              <Skeleton width="5rem" />
+            ) : (
+              formatDollars(0)
+            )}
+          </Typography>
+        </Box>
       </Box>
       <Box
         p="l"
@@ -190,7 +257,7 @@ const Indicators: FC = () => {
           >
             Collateral Ratio
           </Typography>
-          <Typography variant="headline" size="large">
+          <Typography variant="headline" size="medium">
             {data ? (
               `${data ? computeCollateralRatio(data).toFixed(2) : 0}%`
             ) : isLoading ? (
