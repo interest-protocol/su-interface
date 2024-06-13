@@ -70,11 +70,13 @@ const treatMoneyDecimals = (money: number, maxDecimals: number) => {
         ? `${integralPart.slice(0, -9)}.${integralPart.slice(-9, -7)}`
         : integralDigits > 6
           ? `${integralPart.slice(0, -6)}.${integralPart.slice(-6, -4)}`
-          : `${integralPart}.${
-              +integralPart >= 10
-                ? decimalPart?.slice(0, 2) ?? 0
-                : decimalPart ?? 0
-            }`
+          : integralDigits > 4
+            ? `${integralPart.slice(0, -3)}.${integralPart.slice(-3, -1)}`
+            : `${integralPart}.${
+                +integralPart >= 10
+                  ? decimalPart?.slice(0, 2) ?? 0
+                  : decimalPart ?? 0
+              }`
   );
 
   const newMoneyString = isExponential(newMoney)
@@ -121,7 +123,9 @@ export const formatMoney = (money: number, maxFractionDigits = 20): string => {
         ? 'B'
         : integralDigits > 6
           ? 'M'
-          : ''
+          : integralDigits > 4
+            ? 'K'
+            : ''
   }`.slice(1);
 };
 
