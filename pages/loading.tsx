@@ -18,7 +18,7 @@ const EnokiLoadingPage: NextPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout noWallet>
       <Box
         height="100%"
         display="flex"
