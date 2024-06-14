@@ -8,13 +8,11 @@ import ConnectWalletButton from './connect-wallet-button';
 import Profile from './profile';
 
 const Wallet: FC = () => {
-  const { address, isEnoki } = useAccount();
-
-  if (address && isEnoki) return null;
+  const { address } = useAccount();
 
   return (
     <Box gap="m" display="flex" alignItems="center" justifyContent="flex-end">
-      {address && !isEnoki ? (
+      {address ? (
         <>
           <Box display={['none', 'none', 'block']}>
             <Mint />

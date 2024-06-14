@@ -1,7 +1,6 @@
 import { useSuiClient } from '@mysten/dapp-kit';
 import { CoinMetadata } from '@mysten/sui/client';
-import { SUI_TYPE_ARG } from '@mysten/sui/utils';
-import { normalizeStructTag } from '@mysten/sui/utils';
+import { normalizeStructTag, SUI_TYPE_ARG } from '@mysten/sui/utils';
 import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 import useSWR from 'swr';

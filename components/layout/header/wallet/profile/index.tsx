@@ -19,7 +19,7 @@ const Profile: FC = () => {
   const [menuIsDropdown, setMenuIsDropdown] = useState(
     isOpenProfile || isOpenAccount
   );
-  const { address } = useAccount();
+  const { address, isEnoki } = useAccount();
 
   const account = address || '';
 
@@ -134,11 +134,13 @@ const Profile: FC = () => {
         handleOpenSwitch={handleOpenAccount}
         handleCloseProfile={handleCloseProfile}
       />
-      <MenuSwitchAccount
-        isOpen={isOpenAccount}
-        onBack={handleOpenProfile}
-        handleCloseProfile={handleCloseProfile}
-      />
+      {!isEnoki && (
+        <MenuSwitchAccount
+          isOpen={isOpenAccount}
+          onBack={handleOpenProfile}
+          handleCloseProfile={handleCloseProfile}
+        />
+      )}
     </Box>
   );
 };

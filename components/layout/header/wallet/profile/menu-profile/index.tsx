@@ -1,5 +1,6 @@
 import { Box, Motion, Theme, useTheme } from '@interest-protocol/ui-kit';
 import { useDisconnectWallet } from '@mysten/dapp-kit';
+import { useEnokiFlow } from '@mysten/enoki/react';
 import { FC, useState } from 'react';
 import unikey from 'unikey';
 
@@ -18,16 +19,18 @@ const MenuProfile: FC<MenuProfileProps> = ({
   handleOpenSwitch,
   handleCloseProfile,
 }) => {
+  const flow = useEnokiFlow();
+  const { address, isEnoki } = useAccount();
   const { breakpoints } = useTheme() as Theme;
   const [isDesktop, setIsDesktop] = useState(false);
-  const currentAccount = useAccount();
   const { mutate: disconnect } = useDisconnectWallet();
 
-  const account = currentAccount?.address || '';
+  const account = address || '';
 
   const handleAction: Record<string, () => void | Promise<void>> = {
     disconnect: () => {
       handleCloseProfile();
+      if (isEnoki) return flow.logout();
       disconnect();
     },
     switchAccounts: handleOpenSwitch,
@@ -75,24 +78,30 @@ const MenuProfile: FC<MenuProfileProps> = ({
           <MenuButton handleClose={handleCloseProfile} />
         </Box>
         <UserInfo />
-        {MENU_PROFILE_DATA.slice(0, !isDesktop ? -1 : undefined).map(
-          (profileItem) => (
+        {MENU_PROFILE_DATA.filter(
+          ({ name }) => !(isEnoki && name === 'switchAccounts')
+        )
+          .slice(0, !isDesktop ? -1 : undefined)
+          .map((profileItem) => (
             <MenuProfileItem
               {...profileItem}
               handleAction={handleAction}
               key={unikey()}
             />
-          )
-        )}
+          ))}
       </Box>
       {!isDesktop &&
-        MENU_PROFILE_DATA.slice(-1).map((profileItem) => (
-          <MenuProfileItem
-            {...profileItem}
-            handleAction={handleAction}
-            key={unikey()}
-          />
-        ))}
+        MENU_PROFILE_DATA.filter(
+          ({ name }) => !(isEnoki && name === 'switchAccounts')
+        )
+          .slice(-1)
+          .map((profileItem) => (
+            <MenuProfileItem
+              {...profileItem}
+              handleAction={handleAction}
+              key={unikey()}
+            />
+          ))}
     </Motion>
   );
 };

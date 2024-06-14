@@ -1,3 +1,4 @@
+import { Box, ProgressIndicator } from '@interest-protocol/ui-kit';
 import { useEnokiFlow } from '@mysten/enoki/react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -18,7 +19,15 @@ const EnokiLoadingPage: NextPage = () => {
 
   return (
     <Layout>
-      <div>loading</div>
+      <Box
+        height="100%"
+        display="flex"
+        gridColumn="1/-1"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <ProgressIndicator size={56} variant="loading" />
+      </Box>
     </Layout>
   );
 };
