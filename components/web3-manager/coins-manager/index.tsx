@@ -1,12 +1,12 @@
-import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
-import { CoinMetadata } from '@mysten/sui.js/client';
-import { SUI_TYPE_ARG } from '@mysten/sui.js/utils';
-import { normalizeStructTag } from '@mysten/sui.js/utils';
+import { useSuiClient } from '@mysten/dapp-kit';
+import { CoinMetadata } from '@mysten/sui/client';
+import { normalizeStructTag, SUI_TYPE_ARG } from '@mysten/sui/utils';
 import BigNumber from 'bignumber.js';
 import { FC } from 'react';
 import useSWR from 'swr';
 
 import { FSUI_TYPE, ISUI_TYPE, SUI_DOLLAR_TYPE, XSUI_TYPE } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 import { useCoins } from '@/hooks/use-coins';
 import { isSui, ZERO_BIG_NUMBER } from '@/utils';
 
@@ -35,23 +35,23 @@ const getCoins: TGetCoins = async (
 
 const CoinsManager: FC = () => {
   const suiClient = useSuiClient();
-  const currentAccount = useCurrentAccount();
+  const { address } = useAccount();
   const { id, delay, updateCoins, updateLoading, updateError } = useCoins();
 
   useSWR(
-    `${[id, currentAccount?.address, CoinsManager.name]}`,
+    `${[id, address, CoinsManager.name]}`,
     async () => {
       try {
         updateError(false);
         updateLoading(true);
-        if (!currentAccount?.address) {
+        if (!address) {
           updateCoins({} as CoinsMap);
           return;
         }
 
         const rawData = await Promise.all(
           COINS_TYPE.flatMap((coinTYpe) =>
-            getCoins(suiClient, currentAccount.address, coinTYpe)
+            getCoins(suiClient, address, coinTYpe)
           )
         );
 

@@ -1,8 +1,9 @@
 import { useSuiClient } from '@mysten/dapp-kit';
-import { SuiObjectResponse } from '@mysten/sui.js/client';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
+import { bcs } from '@mysten/sui/bcs';
+import { SuiObjectResponse } from '@mysten/sui/client';
+import { Transaction } from '@mysten/sui/transactions';
 import {
-  devInspectAndGetReturnValues,
+  devInspectAndGetResults,
   getSuiObjectResponseFields,
 } from '@polymedia/suitcase-core';
 import BigNumber from 'bignumber.js';
@@ -122,35 +123,29 @@ const useSuState = () => {
         },
       });
 
-      const fNavTXB = new TransactionBlock();
+      const fNavTX = new Transaction();
 
-      fNavTXB.moveCall({
+      fNavTX.moveCall({
         target: `${OBJECT_IDS.SU}::quote::f_nav`,
         arguments: [
-          fNavTXB.object(OBJECT_IDS.TREASURY),
-          fNavTXB.pure(priceBn.toString()),
+          fNavTX.object(OBJECT_IDS.TREASURY),
+          fNavTX.pure.u64(priceBn.toString()),
         ],
       });
 
-      const xNavTXB = new TransactionBlock();
+      const xNavTX = new Transaction();
 
-      xNavTXB.moveCall({
+      xNavTX.moveCall({
         target: `${OBJECT_IDS.SU}::quote::x_nav`,
         arguments: [
-          xNavTXB.object(OBJECT_IDS.TREASURY),
-          xNavTXB.pure(priceBn.toString()),
+          xNavTX.object(OBJECT_IDS.TREASURY),
+          xNavTX.pure.u64(priceBn.toString()),
         ],
       });
 
-      const fNavPromise = devInspectAndGetReturnValues(
-        suiClient as never,
-        fNavTXB
-      );
+      const fNavPromise = devInspectAndGetResults(suiClient as never, fNavTX);
 
-      const xNavPromise = devInspectAndGetReturnValues(
-        suiClient as never,
-        xNavTXB
-      );
+      const xNavPromise = devInspectAndGetResults(suiClient as never, xNavTX);
 
       const [treasuryState, treasuryCaps, [fNav], [xNav]] = await Promise.all([
         fetchTreasuryStatePromise,
@@ -165,8 +160,8 @@ const useSuState = () => {
       return parseData({
         treasuryState: treasuryStateFields,
         treasuryCaps,
-        fNav: fNav as unknown as string,
-        xNav: xNav as unknown as string,
+        fNav: bcs.U64.parse(new Uint8Array(fNav!.returnValues![0][0])),
+        xNav: bcs.U64.parse(new Uint8Array(xNav!.returnValues![0][0])),
         vaultState: vaultStateFields,
       });
     },

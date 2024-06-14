@@ -1,9 +1,9 @@
 import { Box, Typography } from '@interest-protocol/ui-kit';
-import { useCurrentAccount } from '@mysten/dapp-kit';
 import { FC, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
 import { useSuiNs } from '@/context/suins';
+import { useAccount } from '@/hooks/use-account';
 import { UserSVG } from '@/svg';
 
 import { getName } from '../profile/profile.utils';
@@ -11,10 +11,10 @@ import { AvatarProps } from './account-info.types';
 
 const Avatar: FC<AvatarProps> = ({ account, withNameOrAddress }) => {
   const { names, images, loading } = useSuiNs();
-  const currentAccount = useCurrentAccount();
+  const { address } = useAccount();
   const [imgLoading, setImgLoading] = useState(true);
 
-  const src = images[names[account ?? currentAccount!.address!]] ?? '';
+  const src = images[names[account ?? address!]] ?? '';
 
   return (
     <>
@@ -65,7 +65,7 @@ const Avatar: FC<AvatarProps> = ({ account, withNameOrAddress }) => {
           {loading ? (
             <Skeleton width="100%" />
           ) : (
-            getName(account ?? currentAccount?.address ?? '', names)
+            getName(account ?? address ?? '', names)
           )}
         </Typography>
       )}

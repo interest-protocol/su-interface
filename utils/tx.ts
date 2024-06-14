@@ -1,4 +1,4 @@
-import { SuiTransactionBlockResponse } from '@mysten/sui.js/client';
+import { SuiTransactionBlockResponse } from '@mysten/sui/client';
 
 export const throwTXIfNotSuccessful = (
   tx: SuiTransactionBlockResponse,

@@ -1,20 +1,19 @@
 import { Box, Button } from '@interest-protocol/ui-kit';
-import {
-  useCurrentAccount,
-  useSignTransactionBlock,
-  useSuiClient,
-} from '@mysten/dapp-kit';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui.js/utils';
+import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
+import { useEnokiFlow } from '@mysten/enoki/react';
+import { Transaction } from '@mysten/sui/transactions';
+import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils';
 import { FC, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import { ISUI_TYPE, OBJECT_IDS } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 import { useWeb3 } from '@/hooks/use-web3';
 import {
   getCoinOfValue,
   getSafeValue,
+  showDigestSuccessToast,
   showTXSuccessToast,
   throwTXIfNotSuccessful,
   ZERO_BIG_NUMBER,
@@ -27,12 +26,13 @@ import { getActiveCoinType } from './forms.utils';
 
 const FormButton: FC = () => {
   const { mutate, coinsMap } = useWeb3();
+  const flow = useEnokiFlow();
   const suiClient = useSuiClient();
-  const wallet = useCurrentAccount();
+  const wallet = useAccount();
   const { control } = useFormContext<SuForm>();
   const [loading, setLoading] = useState(false);
 
-  const { mutateAsync: signTransaction } = useSignTransactionBlock();
+  const { mutateAsync: signTransaction } = useSignTransaction();
 
   const form = useWatch({ control });
 
@@ -63,7 +63,7 @@ const FormButton: FC = () => {
 
       setLoading(true);
 
-      const txb = new TransactionBlock();
+      const tx = new Transaction();
 
       const amount = getSafeValue({
         coinValue: form.iSui?.value || '0',
@@ -75,25 +75,25 @@ const FormButton: FC = () => {
       const isXMint = !!form.xSui?.active;
 
       const base_in = getCoinOfValue({
-        txb,
+        tx,
         coinsMap,
         coinValue: BigInt(amount.decimalPlaces(0).toString()),
         coinType: `${OBJECT_IDS.SU}::i_sui::I_SUI` as Type,
       });
 
-      const price = requestPriceOracle(txb);
+      const price = requestPriceOracle(tx);
 
-      const [coinOut, coinExtra] = txb.moveCall({
+      const [coinOut, coinExtra] = tx.moveCall({
         target: `${OBJECT_IDS.SU}::vault::${
           isFMint ? 'mint_f_coin' : isXMint ? 'mint_x_coin' : 'mint_d_coin'
         }`,
         arguments: [
-          txb.object(OBJECT_IDS.VAULT),
-          txb.object(OBJECT_IDS.TREASURY),
-          txb.object(SUI_CLOCK_OBJECT_ID),
+          tx.object(OBJECT_IDS.VAULT),
+          tx.object(OBJECT_IDS.TREASURY),
+          tx.object(SUI_CLOCK_OBJECT_ID),
           base_in,
           price,
-          txb.pure('0'),
+          tx.pure.u64('0'),
         ],
       });
 
@@ -101,22 +101,48 @@ const FormButton: FC = () => {
 
       if (isXMint) returnValues.push(coinExtra);
 
-      txb.transferObjects(returnValues, wallet.address);
+      tx.transferObjects(returnValues, wallet.address);
 
-      const { signature, transactionBlockBytes } = await signTransaction({
-        transactionBlock: txb,
-      });
+      if (wallet.isEnoki) {
+        const { digest } = await flow.sponsorAndExecuteTransaction({
+          network: 'testnet',
+          client: suiClient,
+          transaction: tx,
+        });
 
-      const tx = await suiClient.executeTransactionBlock({
-        signature,
-        transactionBlock: transactionBlockBytes,
-        requestType: 'WaitForEffectsCert',
-        options: { showEffects: true },
-      });
+        showDigestSuccessToast(digest);
 
-      throwTXIfNotSuccessful(tx);
+        await suiClient.waitForTransaction({
+          digest,
+          timeout: 10000,
+          pollInterval: 500,
+        });
 
-      showTXSuccessToast(tx);
+        await mutate();
+      } else {
+        const { signature, bytes } = await signTransaction({
+          transaction: tx,
+        });
+
+        const etx = await suiClient.executeTransactionBlock({
+          signature,
+          transactionBlock: bytes,
+          requestType: 'WaitForEffectsCert',
+          options: { showEffects: true },
+        });
+
+        throwTXIfNotSuccessful(etx);
+
+        showTXSuccessToast(etx);
+
+        await suiClient.waitForTransaction({
+          digest: etx.digest,
+          timeout: 10000,
+          pollInterval: 500,
+        });
+
+        await mutate();
+      }
     } finally {
       setLoading(false);
       mutate();
@@ -147,7 +173,7 @@ const FormButton: FC = () => {
 
       setLoading(true);
 
-      const txb = new TransactionBlock();
+      const tx = new Transaction();
 
       const valueIn = isFRedeem
         ? form.fSui?.value
@@ -167,7 +193,7 @@ const FormButton: FC = () => {
       });
 
       const coinIn = getCoinOfValue({
-        txb,
+        tx,
         coinsMap,
         coinValue: BigInt(amount.decimalPlaces(0).toString()),
         coinType: `${OBJECT_IDS.SU}::${
@@ -179,9 +205,9 @@ const FormButton: FC = () => {
         }` as Type,
       });
 
-      const price = requestPriceOracle(txb);
+      const price = requestPriceOracle(tx);
 
-      const [coinOut] = txb.moveCall({
+      const [coinOut] = tx.moveCall({
         target: `${OBJECT_IDS.SU}::vault::${
           isFRedeem
             ? 'redeem_f_coin'
@@ -190,31 +216,49 @@ const FormButton: FC = () => {
               : 'redeem_d_coin'
         }`,
         arguments: [
-          txb.object(OBJECT_IDS.VAULT),
-          txb.object(OBJECT_IDS.TREASURY),
-          txb.object(SUI_CLOCK_OBJECT_ID),
+          tx.object(OBJECT_IDS.VAULT),
+          tx.object(OBJECT_IDS.TREASURY),
+          tx.object(SUI_CLOCK_OBJECT_ID),
           coinIn,
           price,
-          txb.pure('0'),
+          tx.pure.u64('0'),
         ],
       });
 
-      txb.transferObjects([coinOut], wallet.address);
+      tx.transferObjects([coinOut], wallet.address);
 
-      const { signature, transactionBlockBytes } = await signTransaction({
-        transactionBlock: txb,
-      });
+      if (wallet.isEnoki) {
+        const { digest } = await flow.sponsorAndExecuteTransaction({
+          network: 'testnet',
+          client: suiClient,
+          transaction: tx,
+        });
 
-      const tx = await suiClient.executeTransactionBlock({
-        signature,
-        transactionBlock: transactionBlockBytes,
-        requestType: 'WaitForEffectsCert',
-        options: { showEffects: true },
-      });
+        showDigestSuccessToast(digest);
 
-      throwTXIfNotSuccessful(tx);
+        await suiClient.waitForTransaction({
+          digest,
+          timeout: 10000,
+          pollInterval: 500,
+        });
 
-      showTXSuccessToast(tx);
+        await mutate();
+      } else {
+        const { signature, bytes } = await signTransaction({
+          transaction: tx,
+        });
+
+        const etx = await suiClient.executeTransactionBlock({
+          signature,
+          transactionBlock: bytes,
+          requestType: 'WaitForEffectsCert',
+          options: { showEffects: true },
+        });
+
+        throwTXIfNotSuccessful(etx);
+
+        showTXSuccessToast(etx);
+      }
     } finally {
       mutate();
       setLoading(false);

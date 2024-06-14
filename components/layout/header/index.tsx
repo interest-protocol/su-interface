@@ -5,9 +5,10 @@ import Checkpoint from '@/components/checkpoint';
 import Mint from '@/components/mint';
 import { LogoSVG } from '@/components/svg';
 
+import { LayoutProps } from '../layout.types';
 import Wallet from './wallet';
 
-const Header: FC = () => (
+const Header: FC<LayoutProps> = ({ noWallet }) => (
   <Box variant="container" width={['unset', 'unset', '100%']}>
     <Box
       zIndex="1"
@@ -52,9 +53,7 @@ const Header: FC = () => (
           </Button>
         </Box>
       </Box>
-      <Box display="flex">
-        <Wallet />
-      </Box>
+      <Box display="flex">{!noWallet && <Wallet />}</Box>
     </Box>
     <Box
       width="100%"

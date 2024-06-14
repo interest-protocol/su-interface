@@ -3,15 +3,16 @@ import { FC, PropsWithChildren } from 'react';
 
 import Footer from './footer';
 import Header from './header';
+import { LayoutProps } from './layout.types';
 
-const Layout: FC<PropsWithChildren> = ({ children }) => (
+const Layout: FC<PropsWithChildren<LayoutProps>> = ({ children, noWallet }) => (
   <Box
     display="flex"
     color="onSurface"
     minHeight="100vh"
     flexDirection="column"
   >
-    <Header />
+    <Header noWallet={noWallet} />
     <Box
       flex="1"
       alignItems="start"

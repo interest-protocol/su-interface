@@ -1,11 +1,12 @@
-import { useCurrentAccount, useSuiClient } from '@mysten/dapp-kit';
-import { CoinMetadata } from '@mysten/sui.js/client';
-import { normalizeStructTag } from '@mysten/sui.js/utils';
+import { useSuiClient } from '@mysten/dapp-kit';
+import { CoinMetadata } from '@mysten/sui/client';
+import { normalizeStructTag } from '@mysten/sui/utils';
 import BigNumber from 'bignumber.js';
 import { createContext, FC, PropsWithChildren, useContext } from 'react';
 import useSWR from 'swr';
 
 import { FSUI_TYPE, ISUI_TYPE, SUI_DOLLAR_TYPE, XSUI_TYPE } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 import { ZERO_BIG_NUMBER } from '@/utils';
 
 import { CoinsMap, Web3Context } from './web3.types';
@@ -14,39 +15,39 @@ const web3Context = createContext<Web3Context>({} as Web3Context);
 
 export const Web3Provider: FC<PropsWithChildren> = ({ children }) => {
   const suiClient = useSuiClient();
-  const currentAccount = useCurrentAccount();
+  const { address } = useAccount();
   const { Provider } = web3Context;
 
   const { data, isLoading, error, mutate } = useSWR<CoinsMap>(
-    `${currentAccount?.address}`,
+    `${address}${Web3Provider.name}`,
     async () => {
-      if (!currentAccount?.address) return {};
+      if (!address) return {};
 
       const [iSuiRaw, xSuiRaw, fSuiRaw, suiDRaw] = await Promise.all([
         suiClient
           .getCoins({
-            owner: currentAccount?.address,
+            owner: address,
             coinType: ISUI_TYPE,
             limit: 50,
           })
           .then(({ data }) => data),
         suiClient
           .getCoins({
-            owner: currentAccount?.address,
+            owner: address,
             coinType: XSUI_TYPE,
             limit: 50,
           })
           .then(({ data }) => data),
         suiClient
           .getCoins({
-            owner: currentAccount?.address,
+            owner: address,
             coinType: FSUI_TYPE,
             limit: 50,
           })
           .then(({ data }) => data),
         suiClient
           .getCoins({
-            owner: currentAccount?.address,
+            owner: address,
             coinType: SUI_DOLLAR_TYPE,
             limit: 50,
           })

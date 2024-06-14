@@ -1,14 +1,11 @@
 import { Box, Button, Motion } from '@interest-protocol/ui-kit';
-import {
-  useAccounts,
-  useCurrentAccount,
-  useSwitchAccount,
-} from '@mysten/dapp-kit';
+import { useAccounts, useSwitchAccount } from '@mysten/dapp-kit';
 import { FC } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { CheckmarkSVG, CopySVG } from '@/components/svg';
 import { wrapperVariants } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 
 import Avatar from '../../account-info/avatar';
 import { MenuSwitchAccountProps } from '../profile.types';
@@ -21,7 +18,7 @@ const MenuSwitchAccount: FC<MenuSwitchAccountProps> = ({
   handleCloseProfile,
 }) => {
   const accounts = useAccounts();
-  const currentAccount = useCurrentAccount();
+  const currentAccount = useAccount();
   const { mutate: selectAccount } = useSwitchAccount();
 
   const account = currentAccount?.address || '';
