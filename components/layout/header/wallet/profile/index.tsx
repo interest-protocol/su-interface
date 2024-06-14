@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button } from '@interest-protocol/ui-kit';
-import { useCurrentAccount } from '@mysten/dapp-kit';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 
+import { useAccount } from '@/hooks/use-account';
 import useClickOutsideListenerRef from '@/hooks/use-click-outside-listener-ref';
 
 import Avatar from '../account-info/avatar';
@@ -19,9 +19,9 @@ const Profile: FC = () => {
   const [menuIsDropdown, setMenuIsDropdown] = useState(
     isOpenProfile || isOpenAccount
   );
-  const currentAccount = useCurrentAccount();
+  const { address } = useAccount();
 
-  const account = currentAccount?.address || '';
+  const account = address || '';
 
   useEffect(() => {
     setMenuIsDropdown(isOpenProfile || isOpenAccount);

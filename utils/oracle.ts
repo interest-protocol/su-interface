@@ -1,15 +1,11 @@
-import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui.js/utils';
+import { Transaction, TransactionResult } from '@mysten/sui/transactions';
+import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils';
 
 import { OBJECT_IDS } from '@/constants';
 
-interface Price {
-  index: number;
-  resultIndex: number;
-  kind: 'NestedResult';
-}
-
-export const requestPriceOracle = (txb: TransactionBlock): Price => {
+export const requestPriceOracle = (
+  txb: Transaction
+): TransactionResult[number] => {
   const request = txb.moveCall({
     typeArguments: [`${OBJECT_IDS.SU}::oracle::SuOracle`],
     target: `${OBJECT_IDS.SUITEARS}::oracle::request`,

@@ -1,6 +1,7 @@
-import { SuiClient } from '@mysten/sui.js/client';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { devInspectAndGetReturnValues } from '@polymedia/suitcase-core';
+import { bcs } from '@mysten/sui/bcs';
+import { SuiClient } from '@mysten/sui/client';
+import { Transaction } from '@mysten/sui/transactions';
+import { devInspectAndGetResults } from '@polymedia/suitcase-core';
 import BigNumber from 'bignumber.js';
 
 import { OBJECT_IDS } from '@/constants';
@@ -32,24 +33,23 @@ export const makeQuoteCall = async ({
 
   const price = FixedPointMath.toBigNumber(suiPrice);
 
-  const txb = new TransactionBlock();
+  const tx = new Transaction();
 
-  txb.moveCall({
+  tx.moveCall({
     target: `${OBJECT_IDS.SU}::quote::${functionName}`,
     arguments: [
-      txb.object(OBJECT_IDS.VAULT),
-      txb.object(OBJECT_IDS.TREASURY),
-      txb.pure(FixedPointMath.toBigNumber(value).decimalPlaces(0).toString()),
-      txb.pure(price.toString()),
+      tx.object(OBJECT_IDS.VAULT),
+      tx.object(OBJECT_IDS.TREASURY),
+      tx.pure.u64(
+        FixedPointMath.toBigNumber(value).decimalPlaces(0).toString()
+      ),
+      tx.pure.u64(price.toString()),
     ],
   });
 
-  const values = (await devInspectAndGetReturnValues(
-    suiClient,
-    txb
-  )) as number[][];
+  const values = await devInspectAndGetResults(suiClient, tx);
 
-  if (!values.length || !values[0].length)
+  if (!values.length || !values[0]?.returnValues?.length)
     return {
       valueOut: ZERO_BIG_NUMBER,
       bonus: ZERO_BIG_NUMBER,
@@ -57,7 +57,10 @@ export const makeQuoteCall = async ({
       feePercent: ZERO_BIG_NUMBER,
     };
 
-  const data = values[0];
+  const data = values[0].returnValues.map((elem) => {
+    const [x] = elem;
+    return bcs.U64.parse(new Uint8Array(x));
+  });
 
   return data.length === 3
     ? {

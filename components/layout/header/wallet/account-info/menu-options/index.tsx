@@ -1,7 +1,6 @@
 import { Box, Motion, Typography } from '@interest-protocol/ui-kit';
 import {
   useAccounts,
-  useCurrentAccount,
   useCurrentWallet,
   useSwitchAccount,
 } from '@mysten/dapp-kit';
@@ -9,6 +8,7 @@ import { FC, ReactNode, useState } from 'react';
 import unikey from 'unikey';
 
 import { wrapperVariants } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 import { ArrowLeftSVG, LogoutSVG } from '@/svg';
 
 import ConnectWalletButton from '../../connect-wallet-button';
@@ -18,7 +18,7 @@ import OptionItem from './option-item';
 
 const AccountSubMenu: FC<{ closeSubmenu: () => void }> = ({ closeSubmenu }) => {
   const accounts = useAccounts();
-  const currentAccount = useCurrentAccount();
+  const { address } = useAccount();
   const { mutate: selectAccount } = useSwitchAccount();
 
   return (
@@ -33,7 +33,7 @@ const AccountSubMenu: FC<{ closeSubmenu: () => void }> = ({ closeSubmenu }) => {
         <OptionItem
           key={unikey()}
           onClick={() => selectAccount({ account })}
-          selected={currentAccount?.address === account.address}
+          selected={address === account.address}
         >
           <Avatar withNameOrAddress account={account?.address} />
         </OptionItem>

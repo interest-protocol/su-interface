@@ -1,57 +1,87 @@
 import { Button } from '@interest-protocol/ui-kit';
-import {
-  useCurrentAccount,
-  useSignTransactionBlock,
-  useSuiClient,
-} from '@mysten/dapp-kit';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
+import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
+import { useEnokiFlow } from '@mysten/enoki/react';
+import { Transaction } from '@mysten/sui/transactions';
 import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { OBJECT_IDS } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 import { useWeb3 } from '@/hooks/use-web3';
 import { FixedPointMath } from '@/lib';
-import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
+import {
+  showDigestSuccessToast,
+  showTXSuccessToast,
+  throwTXIfNotSuccessful,
+} from '@/utils';
 
 import { ISuiSVG } from '../svg';
 
 const Mint: FC = () => {
   const suiClient = useSuiClient();
-  const wallet = useCurrentAccount();
+  const { address, isEnoki } = useAccount();
+  const flow = useEnokiFlow();
   const [isLoading, setLoading] = useState(false);
-  const signTransactionBlock = useSignTransactionBlock();
+  const signTransaction = useSignTransaction();
   const { mutate } = useWeb3();
 
   const mint = async () => {
     try {
-      if (!wallet?.address) throw new Error('Must connect your wallet');
+      if (!address) throw new Error('Must connect your wallet');
       setLoading(true);
 
-      const txb = new TransactionBlock();
+      const tx = new Transaction();
 
-      const coin = txb.moveCall({
+      const coin = tx.moveCall({
         target: `${OBJECT_IDS.SU}::i_sui::mint`,
         arguments: [
-          txb.object(OBJECT_IDS.I_SUI_TREASURY),
-          txb.pure(FixedPointMath.toBigNumber(5).toString()),
+          tx.object(OBJECT_IDS.I_SUI_TREASURY),
+          tx.pure.u64(FixedPointMath.toBigNumber(5).toString()),
         ],
       });
 
-      txb.transferObjects([coin], wallet.address);
+      tx.transferObjects([coin], address);
 
-      const { signature, transactionBlockBytes } =
-        await signTransactionBlock.mutateAsync({ transactionBlock: txb });
+      if (isEnoki) {
+        const { digest } = await flow.sponsorAndExecuteTransaction({
+          network: 'testnet',
+          client: suiClient,
+          transaction: tx,
+        });
 
-      const tx = await suiClient.executeTransactionBlock({
-        signature,
-        transactionBlock: transactionBlockBytes,
-        requestType: 'WaitForEffectsCert',
-        options: { showEffects: true },
-      });
+        showDigestSuccessToast(digest);
 
-      throwTXIfNotSuccessful(tx);
+        await suiClient.waitForTransaction({
+          digest,
+          timeout: 10000,
+          pollInterval: 500,
+        });
 
-      showTXSuccessToast(tx);
+        await mutate();
+      } else {
+        const { signature, bytes } = await signTransaction.mutateAsync({
+          transaction: tx,
+        });
+
+        const etx = await suiClient.executeTransactionBlock({
+          signature,
+          transactionBlock: bytes,
+          requestType: 'WaitForEffectsCert',
+          options: { showEffects: true },
+        });
+
+        throwTXIfNotSuccessful(etx);
+
+        showTXSuccessToast(etx);
+
+        await suiClient.waitForTransaction({
+          digest: etx.digest,
+          timeout: 10000,
+          pollInterval: 500,
+        });
+
+        await mutate();
+      }
     } finally {
       mutate();
       setLoading(false);
@@ -65,7 +95,7 @@ const Mint: FC = () => {
       error: 'Error on mint iSui!',
     });
 
-  if (!wallet) return null;
+  if (!address) return null;
 
   return (
     <Button

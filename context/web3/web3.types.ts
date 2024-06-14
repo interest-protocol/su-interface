@@ -1,4 +1,4 @@
-import { CoinMetadata, CoinStruct } from '@mysten/sui.js/client';
+import { CoinMetadata, CoinStruct } from '@mysten/sui/client';
 import BigNumber from 'bignumber.js';
 
 export type Type = `0x${string}`;

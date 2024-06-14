@@ -1,6 +1,6 @@
-import { CoinStruct } from '@mysten/sui.js/client';
-import { TransactionResult } from '@mysten/sui.js/transactions';
-import { normalizeStructTag, SUI_TYPE_ARG } from '@mysten/sui.js/utils';
+import { CoinStruct } from '@mysten/sui/client';
+import { TransactionResult } from '@mysten/sui/transactions';
+import { normalizeStructTag, SUI_TYPE_ARG } from '@mysten/sui/utils';
 
 import { FixedPointMath } from '@/lib';
 
@@ -59,24 +59,24 @@ export function removeLeadingZeros(address: string): string {
 export function getCoinOfValue({
   coinValue,
   coinType,
-  txb,
+  tx,
   coinsMap,
 }: GetCoinOfValueArgs): TransactionResult {
   let coinOfValue: TransactionResult;
   coinType = removeLeadingZeros(coinType) as Type;
   if (coinType === '0x2::sui::SUI') {
-    coinOfValue = txb.splitCoins(txb.gas, [txb.pure(coinValue)]);
+    coinOfValue = tx.splitCoins(tx.gas, [tx.pure.u64(coinValue)]);
   } else {
     // Merge all coins into one
     const [firstCoin, ...otherCoins] = coinsMap[coinType].objects;
-    const firstCoinInput = txb.object(firstCoin.coinObjectId);
+    const firstCoinInput = tx.object(firstCoin.coinObjectId);
     if (otherCoins.length > 0) {
-      txb.mergeCoins(
+      tx.mergeCoins(
         firstCoinInput,
         otherCoins.map((coin) => coin.coinObjectId)
       );
     }
-    coinOfValue = txb.splitCoins(firstCoinInput, [txb.pure(coinValue)]);
+    coinOfValue = tx.splitCoins(firstCoinInput, [tx.pure.u64(coinValue)]);
   }
   return coinOfValue;
 }

@@ -1,4 +1,4 @@
-import { CoinMetadata, CoinStruct, SuiClient } from '@mysten/sui.js/client';
+import { CoinMetadata, CoinStruct, SuiClient } from '@mysten/sui/client';
 import BigNumber from 'bignumber.js';
 
 export interface CoinObject extends Pick<CoinMetadata, 'symbol' | 'decimals'> {

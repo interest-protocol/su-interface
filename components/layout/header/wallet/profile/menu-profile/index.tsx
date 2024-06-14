@@ -1,9 +1,10 @@
 import { Box, Motion, Theme, useTheme } from '@interest-protocol/ui-kit';
-import { useCurrentAccount, useDisconnectWallet } from '@mysten/dapp-kit';
+import { useDisconnectWallet } from '@mysten/dapp-kit';
 import { FC, useState } from 'react';
 import unikey from 'unikey';
 
 import { EXPLORER_URL, wrapperVariants } from '@/constants';
+import { useAccount } from '@/hooks/use-account';
 import useEventListener from '@/hooks/use-event-listener';
 
 import MenuButton from '../../menu-button';
@@ -19,7 +20,7 @@ const MenuProfile: FC<MenuProfileProps> = ({
 }) => {
   const { breakpoints } = useTheme() as Theme;
   const [isDesktop, setIsDesktop] = useState(false);
-  const currentAccount = useCurrentAccount();
+  const currentAccount = useAccount();
   const { mutate: disconnect } = useDisconnectWallet();
 
   const account = currentAccount?.address || '';

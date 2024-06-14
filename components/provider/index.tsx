@@ -5,7 +5,8 @@ import {
   SuiClientProvider,
   WalletProvider,
 } from '@mysten/dapp-kit';
-import { getFullnodeUrl } from '@mysten/sui.js/client';
+import { EnokiFlowProvider } from '@mysten/enoki/react';
+import { getFullnodeUrl } from '@mysten/sui/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, PropsWithChildren } from 'react';
 
@@ -22,18 +23,22 @@ const { networkConfig } = createNetworkConfig({
   },
 });
 
+const enokiAPI = process.env.NEXT_PUBLIC_ENOKI_API_KEY || '';
+
 const Provider: FC<PropsWithChildren> = ({ children }) => (
   <ThemeManager>
-    <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
         <WalletProvider stashedWallet={{ name: 'Su Protocol' }} autoConnect>
-          <SuiNsProvider>
-            <Web3Manager />
-            {children}
-          </SuiNsProvider>
+          <EnokiFlowProvider apiKey={enokiAPI}>
+            <SuiNsProvider>
+              <Web3Manager />
+              {children}
+            </SuiNsProvider>
+          </EnokiFlowProvider>
         </WalletProvider>
-      </QueryClientProvider>
-    </SuiClientProvider>
+      </SuiClientProvider>
+    </QueryClientProvider>
   </ThemeManager>
 );
 

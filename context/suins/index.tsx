@@ -1,5 +1,5 @@
 import { useAccounts } from '@mysten/dapp-kit';
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
+import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
 import { SuinsClient } from '@mysten/suins-toolkit';
 import { fromPairs, pathOr, prop } from 'ramda';
 import {

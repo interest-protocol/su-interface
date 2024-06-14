@@ -1,17 +1,15 @@
 import { Box, Button, Typography } from '@interest-protocol/ui-kit';
-import { useCurrentAccount } from '@mysten/dapp-kit';
 import { FC } from 'react';
 import { toast } from 'react-hot-toast';
 
+import { useAccount } from '@/hooks/use-account';
 import { CopySVG } from '@/svg';
 
 import Avatar from '../../account-info/avatar';
 import ItemWrapper from '../menu-switch-account/item-wrapper';
 
 const UserInfo: FC = () => {
-  const currentAccount = useCurrentAccount();
-
-  const account = currentAccount?.address || '';
+  const { address } = useAccount();
 
   const copyToClipboard = (address: string) => {
     window.navigator.clipboard.writeText(address || '');
@@ -37,7 +35,7 @@ const UserInfo: FC = () => {
               variant="text"
               onClick={(e) => {
                 e.stopPropagation();
-                copyToClipboard(account || '');
+                copyToClipboard(address || '');
               }}
             >
               <CopySVG maxHeight="1rem" maxWidth="1rem" width="100%" />

@@ -1,5 +1,5 @@
 import { useSuiClientContext } from '@mysten/dapp-kit';
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
+import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
 import { useState } from 'react';
 import useSWR from 'swr';
 
