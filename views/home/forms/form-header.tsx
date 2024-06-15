@@ -26,12 +26,14 @@ const FormHeader: FC = () => {
     resetField('xSui');
     resetField('iSui');
     resetField('dSui');
+    setValue('xSui.active', false);
+
     setValue('iSui.usdPrice', iSuiPriceTmp);
     setValue('xSui.usdPrice', xSuiPriceTmp);
     setValue('fSui.usdPrice', fSuiPriceTmp);
     setValue('dSui.usdPrice', dSuiPriceTmp);
 
-    setValue(`${tabIndex ? 'x' : 'd'}Sui.active`, true);
+    setValue(`${!tabIndex ? 'x' : 'd'}Sui.active`, true);
   };
 
   return (
