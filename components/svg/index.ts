@@ -9,7 +9,6 @@ export { default as DiscordSVG } from './discord';
 export { default as EnokiSVG } from './enoki';
 export { default as FSuiSVG } from './f-sui';
 export { default as GithubSVG } from './github';
-export { default as GoogleSVG } from './google';
 export { default as ISuiSVG } from './i-sui';
 export { default as InfoSVG } from './info';
 export { default as LinkSVG } from './link';

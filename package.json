@@ -13,7 +13,6 @@
     "@emotion/react": "^11.11.1",
     "@interest-protocol/ui-kit": "0.2.25-alpha",
     "@mysten/dapp-kit": "^0.14.7",
-    "@mysten/enoki": "^0.3.7",
     "@mysten/sui": "^1.1.1",
     "@mysten/suins-toolkit": "^0.4.4",
     "@polymedia/suitcase-core": "^0.0.6",

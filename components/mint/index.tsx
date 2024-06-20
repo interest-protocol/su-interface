@@ -1,6 +1,5 @@
 import { Button } from '@interest-protocol/ui-kit';
 import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
-import { useEnokiFlow } from '@mysten/enoki/react';
 import { Transaction } from '@mysten/sui/transactions';
 import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -9,18 +8,13 @@ import { OBJECT_IDS } from '@/constants';
 import { useAccount } from '@/hooks/use-account';
 import { useWeb3 } from '@/hooks/use-web3';
 import { FixedPointMath } from '@/lib';
-import {
-  showDigestSuccessToast,
-  showTXSuccessToast,
-  throwTXIfNotSuccessful,
-} from '@/utils';
+import { showTXSuccessToast, throwTXIfNotSuccessful } from '@/utils';
 
 import { ISuiSVG } from '../svg';
 
 const Mint: FC = () => {
   const suiClient = useSuiClient();
-  const { address, isEnoki } = useAccount();
-  const flow = useEnokiFlow();
+  const { address } = useAccount();
   const [isLoading, setLoading] = useState(false);
   const signTransaction = useSignTransaction();
   const { mutate } = useWeb3();
@@ -42,46 +36,28 @@ const Mint: FC = () => {
 
       tx.transferObjects([coin], address);
 
-      if (isEnoki) {
-        const { digest } = await flow.sponsorAndExecuteTransaction({
-          network: 'testnet',
-          client: suiClient,
-          transaction: tx,
-        });
+      const { signature, bytes } = await signTransaction.mutateAsync({
+        transaction: tx,
+      });
 
-        showDigestSuccessToast(digest);
+      const etx = await suiClient.executeTransactionBlock({
+        signature,
+        transactionBlock: bytes,
+        requestType: 'WaitForEffectsCert',
+        options: { showEffects: true },
+      });
 
-        await suiClient.waitForTransaction({
-          digest,
-          timeout: 10000,
-          pollInterval: 500,
-        });
+      throwTXIfNotSuccessful(etx);
 
-        await mutate();
-      } else {
-        const { signature, bytes } = await signTransaction.mutateAsync({
-          transaction: tx,
-        });
+      showTXSuccessToast(etx);
 
-        const etx = await suiClient.executeTransactionBlock({
-          signature,
-          transactionBlock: bytes,
-          requestType: 'WaitForEffectsCert',
-          options: { showEffects: true },
-        });
+      await suiClient.waitForTransaction({
+        digest: etx.digest,
+        timeout: 10000,
+        pollInterval: 500,
+      });
 
-        throwTXIfNotSuccessful(etx);
-
-        showTXSuccessToast(etx);
-
-        await suiClient.waitForTransaction({
-          digest: etx.digest,
-          timeout: 10000,
-          pollInterval: 500,
-        });
-
-        await mutate();
-      }
+      await mutate();
     } finally {
       mutate();
       setLoading(false);

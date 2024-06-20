@@ -16,9 +16,6 @@ importers:
       '@mysten/dapp-kit':
         specifier: ^0.14.7
         version: 0.14.7(@tanstack/react-query@5.28.4(react@18.2.0))(@types/react-dom@18.2.17)(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(svelte@4.2.17)(typescript@5.3.2)
-      '@mysten/enoki':
-        specifier: ^0.3.7
-        version: 0.3.7(@types/react@18.2.38)(react@18.2.0)(svelte@4.2.17)(typescript@5.3.2)
       '@mysten/sui':
         specifier: ^1.1.1
         version: 1.1.1(svelte@4.2.17)(typescript@5.3.2)
@@ -680,20 +677,6 @@ packages:
       '@tanstack/react-query': ^5.0.0
       react: '*'
 
-  '@mysten/enoki@0.3.7':
-    resolution:
-      {
-        integrity: sha512-Ud4syKDCYgH8pYZz18ezM+quB4ebEJf4DKe1+zvZpE3/9IcFaeKbCBUVIK1CfbLg2lWLItAdxCkIlpegY5Aebw==,
-      }
-    peerDependencies:
-      '@types/react': '>=17.0.0'
-      react: '>=17.0.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      react:
-        optional: true
-
   '@mysten/sui.js@0.51.0':
     resolution:
       {
@@ -721,27 +704,11 @@ packages:
         integrity: sha512-KEAOLedQUGjqcXwY04txqO9pNtHH+AkJ0eVYaPd3EXd/f7iT/3fqQWCoUeCYmhWmEBdzJRdT+bqFEnpRKqy2/g==,
       }
 
-  '@mysten/zklogin@0.7.7':
-    resolution:
-      {
-        integrity: sha512-vetBhUR937hP2+o7pDA2DXTAdHpiUQ5lzzjJYDr2YeZ+R4tJPpxEujDk/p6iuKKyPDSmxX01xHY1v+WqjrSslA==,
-      }
-
   '@mysten/zksend@0.9.7':
     resolution:
       {
         integrity: sha512-9/wL4EuG2vfVdzjMiFlv4IB4TLEK2w1DwRKBvdBnOYFKXIeFeeP8z6em4RYQLAiaYN/iiHAStrITjrPESTiZlQ==,
       }
-
-  '@nanostores/react@0.7.2':
-    resolution:
-      {
-        integrity: sha512-e3OhHJFv3NMSFYDgREdlAQqkyBTHJM91s31kOZ4OvZwJKdFk5BLk0MLbh51EOGUz9QGX2aCHfy1RvweSi7fgwA==,
-      }
-    engines: { node: ^18.0.0 || >=20.0.0 }
-    peerDependencies:
-      nanostores: ^0.9.0 || ^0.10.0
-      react: '>=18.0.0'
 
   '@next/env@14.0.3':
     resolution:
@@ -3624,12 +3591,6 @@ packages:
       }
     hasBin: true
 
-  jose@5.4.0:
-    resolution:
-      {
-        integrity: sha512-6rpxTHPAQyWMb9A35BroFl1Sp0ST3DpPcm5EVIxZxdH+e0Hv9fwhyB3XLKFUcHNpdSDnETmBfuPPTTlYz5+USw==,
-      }
-
   js-tokens@4.0.0:
     resolution:
       {
@@ -4317,12 +4278,6 @@ packages:
       }
     engines: { node: '>=0.10' }
     hasBin: true
-
-  poseidon-lite@0.2.0:
-    resolution:
-      {
-        integrity: sha512-vivDZnGmz8W4G/GzVA72PXkfYStjilu83rjjUfpL4PueKcC8nfX6hCPh2XhoC5FBgC6y0TA3YuUeUo5YCcNoig==,
-      }
 
   postcss@8.4.31:
     resolution:
@@ -5882,20 +5837,6 @@ snapshots:
       - svelte
       - typescript
 
-  '@mysten/enoki@0.3.7(@types/react@18.2.38)(react@18.2.0)(svelte@4.2.17)(typescript@5.3.2)':
-    dependencies:
-      '@mysten/sui': 1.1.1(svelte@4.2.17)(typescript@5.3.2)
-      '@mysten/zklogin': 0.7.7(svelte@4.2.17)(typescript@5.3.2)
-      '@nanostores/react': 0.7.2(nanostores@0.9.5)(react@18.2.0)
-      jose: 5.4.0
-      nanostores: 0.9.5
-    optionalDependencies:
-      '@types/react': 18.2.38
-      react: 18.2.0
-    transitivePeerDependencies:
-      - svelte
-      - typescript
-
   '@mysten/sui.js@0.51.0':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.8.1)
@@ -5941,17 +5882,6 @@ snapshots:
       - svelte
       - typescript
 
-  '@mysten/zklogin@0.7.7(svelte@4.2.17)(typescript@5.3.2)':
-    dependencies:
-      '@mysten/bcs': 1.0.2
-      '@mysten/sui': 1.1.1(svelte@4.2.17)(typescript@5.3.2)
-      '@noble/hashes': 1.4.0
-      jose: 5.4.0
-      poseidon-lite: 0.2.0
-    transitivePeerDependencies:
-      - svelte
-      - typescript
-
   '@mysten/zksend@0.9.7(svelte@4.2.17)(typescript@5.3.2)':
     dependencies:
       '@mysten/sui': 1.1.1(svelte@4.2.17)(typescript@5.3.2)
@@ -5962,11 +5892,6 @@ snapshots:
     transitivePeerDependencies:
       - svelte
       - typescript
-
-  '@nanostores/react@0.7.2(nanostores@0.9.5)(react@18.2.0)':
-    dependencies:
-      nanostores: 0.9.5
-      react: 18.2.0
 
   '@next/env@14.0.3': {}
 
@@ -7859,8 +7784,6 @@ snapshots:
 
   jiti@1.21.0: {}
 
-  jose@5.4.0: {}
-
   js-tokens@4.0.0: {}
 
   js-yaml@4.1.0:
@@ -8254,8 +8177,6 @@ snapshots:
   picomatch@2.3.1: {}
 
   pidtree@0.6.0: {}
-
-  poseidon-lite@0.2.0: {}
 
   postcss@8.4.31:
     dependencies:

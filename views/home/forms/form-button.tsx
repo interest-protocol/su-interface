@@ -1,6 +1,5 @@
 import { Box, Button } from '@interest-protocol/ui-kit';
 import { useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
-import { useEnokiFlow } from '@mysten/enoki/react';
 import { Transaction } from '@mysten/sui/transactions';
 import { SUI_CLOCK_OBJECT_ID } from '@mysten/sui/utils';
 import { FC, useState } from 'react';
@@ -13,7 +12,6 @@ import { useWeb3 } from '@/hooks/use-web3';
 import {
   getCoinOfValue,
   getSafeValue,
-  showDigestSuccessToast,
   showTXSuccessToast,
   throwTXIfNotSuccessful,
   ZERO_BIG_NUMBER,
@@ -26,7 +24,7 @@ import { getActiveCoinType } from './forms.utils';
 
 const FormButton: FC = () => {
   const { mutate, coinsMap } = useWeb3();
-  const flow = useEnokiFlow();
+
   const suiClient = useSuiClient();
   const wallet = useAccount();
   const { control } = useFormContext<SuForm>();
@@ -103,46 +101,28 @@ const FormButton: FC = () => {
 
       tx.transferObjects(returnValues, wallet.address);
 
-      if (wallet.isEnoki) {
-        const { digest } = await flow.sponsorAndExecuteTransaction({
-          network: 'testnet',
-          client: suiClient,
-          transaction: tx,
-        });
+      const { signature, bytes } = await signTransaction({
+        transaction: tx,
+      });
 
-        showDigestSuccessToast(digest);
+      const etx = await suiClient.executeTransactionBlock({
+        signature,
+        transactionBlock: bytes,
+        requestType: 'WaitForEffectsCert',
+        options: { showEffects: true },
+      });
 
-        await suiClient.waitForTransaction({
-          digest,
-          timeout: 10000,
-          pollInterval: 500,
-        });
+      throwTXIfNotSuccessful(etx);
 
-        await mutate();
-      } else {
-        const { signature, bytes } = await signTransaction({
-          transaction: tx,
-        });
+      showTXSuccessToast(etx);
 
-        const etx = await suiClient.executeTransactionBlock({
-          signature,
-          transactionBlock: bytes,
-          requestType: 'WaitForEffectsCert',
-          options: { showEffects: true },
-        });
+      await suiClient.waitForTransaction({
+        digest: etx.digest,
+        timeout: 10000,
+        pollInterval: 500,
+      });
 
-        throwTXIfNotSuccessful(etx);
-
-        showTXSuccessToast(etx);
-
-        await suiClient.waitForTransaction({
-          digest: etx.digest,
-          timeout: 10000,
-          pollInterval: 500,
-        });
-
-        await mutate();
-      }
+      await mutate();
     } finally {
       setLoading(false);
       mutate();
@@ -227,38 +207,20 @@ const FormButton: FC = () => {
 
       tx.transferObjects([coinOut], wallet.address);
 
-      if (wallet.isEnoki) {
-        const { digest } = await flow.sponsorAndExecuteTransaction({
-          network: 'testnet',
-          client: suiClient,
-          transaction: tx,
-        });
+      const { signature, bytes } = await signTransaction({
+        transaction: tx,
+      });
 
-        showDigestSuccessToast(digest);
+      const etx = await suiClient.executeTransactionBlock({
+        signature,
+        transactionBlock: bytes,
+        requestType: 'WaitForEffectsCert',
+        options: { showEffects: true },
+      });
 
-        await suiClient.waitForTransaction({
-          digest,
-          timeout: 10000,
-          pollInterval: 500,
-        });
+      throwTXIfNotSuccessful(etx);
 
-        await mutate();
-      } else {
-        const { signature, bytes } = await signTransaction({
-          transaction: tx,
-        });
-
-        const etx = await suiClient.executeTransactionBlock({
-          signature,
-          transactionBlock: bytes,
-          requestType: 'WaitForEffectsCert',
-          options: { showEffects: true },
-        });
-
-        throwTXIfNotSuccessful(etx);
-
-        showTXSuccessToast(etx);
-      }
+      showTXSuccessToast(etx);
     } finally {
       mutate();
       setLoading(false);

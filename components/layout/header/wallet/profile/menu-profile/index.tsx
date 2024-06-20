@@ -1,6 +1,5 @@
 import { Box, Motion, Theme, useTheme } from '@interest-protocol/ui-kit';
 import { useDisconnectWallet } from '@mysten/dapp-kit';
-import { useEnokiFlow } from '@mysten/enoki/react';
 import { FC, useState } from 'react';
 import unikey from 'unikey';
 
@@ -19,7 +18,6 @@ const MenuProfile: FC<MenuProfileProps> = ({
   handleOpenSwitch,
   handleCloseProfile,
 }) => {
-  const flow = useEnokiFlow();
   const { address, isEnoki } = useAccount();
   const { breakpoints } = useTheme() as Theme;
   const [isDesktop, setIsDesktop] = useState(false);
@@ -30,7 +28,6 @@ const MenuProfile: FC<MenuProfileProps> = ({
   const handleAction: Record<string, () => void | Promise<void>> = {
     disconnect: () => {
       handleCloseProfile();
-      if (isEnoki) return flow.logout();
       disconnect();
     },
     switchAccounts: handleOpenSwitch,
