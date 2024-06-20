@@ -3,8 +3,8 @@ import { FC } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
 import { DSuiSVG, FSuiSVG, ISuiSVG, PizzaSVG, XSuiSVG } from '@/components/svg';
+import { useSuiPrice } from '@/context/sui-price';
 import useSuState from '@/hooks/use-su-state';
-import useSuiPrice from '@/hooks/use-sui-price';
 import { FixedPointMath } from '@/lib';
 import {
   computeCollateralRatio,
@@ -15,7 +15,7 @@ import {
 
 const Indicators: FC = () => {
   const { data, isLoading } = useSuState();
-  const { data: suiPrice } = useSuiPrice();
+  const { price: suiPrice } = useSuiPrice();
 
   const iSuiSupply = data ? (data ? data.baseBalance : ZERO_BIG_NUMBER) : null;
 

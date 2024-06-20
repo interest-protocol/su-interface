@@ -11,7 +11,7 @@ import { path, pathOr, propOr } from 'ramda';
 import useSWR from 'swr';
 
 import { OBJECT_IDS } from '@/constants';
-import useSuiPrice from '@/hooks/use-sui-price';
+import { useSuiPrice } from '@/context/sui-price';
 import { SuState } from '@/interface';
 import { FixedPointMath } from '@/lib';
 
@@ -97,9 +97,9 @@ const useSuState = () => {
   const suiUSDPrice = useSuiPrice();
 
   return useSWR(
-    useSuState.name + suiUSDPrice.data?.toString(),
+    useSuState.name + suiUSDPrice.price?.toString(),
     async () => {
-      const price = suiUSDPrice.data?.toString();
+      const price = suiUSDPrice.price?.toString();
 
       if (!price) throw new Error('Sui price not found');
 

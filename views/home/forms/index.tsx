@@ -2,8 +2,8 @@ import { Box } from '@interest-protocol/ui-kit';
 import { FC, useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { useSuiPrice } from '@/context/sui-price';
 import useSuState from '@/hooks/use-su-state';
-import useSuiPrice from '@/hooks/use-sui-price';
 import { FixedPointMath } from '@/lib';
 import FormsTip from '@/views/home/forms/forms-tip';
 
@@ -37,7 +37,7 @@ const Forms: FC = () => {
 
   const { data, isLoading } = useSuState();
 
-  const { data: suiPrice } = useSuiPrice();
+  const { price: suiPrice } = useSuiPrice();
 
   useEffect(() => {
     if (suiPrice && !!data && !isLoading) {

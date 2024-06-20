@@ -1,7 +1,7 @@
 import { useSuiClient } from '@mysten/dapp-kit';
 import useSWR from 'swr';
 
-import useSuiPrice from '@/hooks/use-sui-price';
+import { useSuiPrice } from '@/context/sui-price';
 import { QuoteFunctionName } from '@/interface';
 import { makeQuoteCall } from '@/utils/quote';
 
@@ -11,7 +11,8 @@ interface UseFeeArgs {
 }
 
 export const useQuoteCall = ({ value, functionName }: UseFeeArgs) => {
-  const { data } = useSuiPrice();
+  const { price: data } = useSuiPrice();
+
   const suiClient = useSuiClient();
   return useSWR(
     useQuoteCall.name + data?.toString() + value + functionName,
